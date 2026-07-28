@@ -15,7 +15,7 @@ def retrieve_raw_data(config_file: str) -> dict[str, typing.Any]:
     with open(config_file) as f:
         for line in f:
             key, value = line.split('=', 1)
-            raw_config.update({key.strip(): value.strip()})
+            raw_config.update({key.upper().strip(): value.strip()})
     return raw_config
 
 

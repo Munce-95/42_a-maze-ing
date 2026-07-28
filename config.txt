@@ -1,6 +1,6 @@
 WIDTH=20
 HEIGHT=20
-ENTRY=3
+entry=3
 EXIT=6
 OUTPUT_FILE=maze_result.txt
 PERFECT=true
