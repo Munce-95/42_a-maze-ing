@@ -16,4 +16,4 @@ if __name__ == "__main__":
     try:
         main()
     except (TypeError, KeyError, ValueError, FileNotFoundError) as e:
-        exiting(e)
+        exiting(str(e))
