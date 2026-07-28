@@ -37,6 +37,11 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
         width: int = int(dict_config["WIDTH"])
         height: int = int(dict_config["HEIGHT"])
     except (TypeError, ValueError):
-        raise ValueError("Error: WIDTH and HEIGHT must be valid integers in <config_file>.")
+        raise ValueError("Error: WIDTH and HEIGHT must"
+                         "be valid integers in <config_file>.")
     if width < 10 or height < 10:
-        raise ValueError("Error: WIDTH and HEIGHT must be >= 10 in <config_file>.")
+        raise ValueError("Error: WIDTH and HEIGHT must be"
+                         ">= 10 in <config_file>.")
+    perfect: str = dict_config.get("PERFECT", "").lower()
+    if perfect not in ("true", "false"):
+        raise ValueError("Error: PERFECT must be 'true' or 'false' in <config_file>.")

@@ -12,8 +12,11 @@ def main() -> None:
     check_raw_data(retrieved_data)
     check_values(retrieved_data)
 
+
 if __name__ == "__main__":
     try:
         main()
     except (TypeError, KeyError, ValueError, FileNotFoundError) as e:
         exiting(str(e))
+    else:
+        print("All good! ... for now")
