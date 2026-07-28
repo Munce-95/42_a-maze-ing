@@ -18,3 +18,5 @@ if __name__ == "__main__":
         main()
     except (TypeError, KeyError, ValueError, FileNotFoundError) as e:
         exiting(str(e))
+    else:
+        print("All good! ... for now")
