@@ -9,8 +9,6 @@ def check_args() -> None:
     if sys.argv[1] != "config.txt":
         raise FileNotFoundError("Error: wrong name for <config_file>.")
 
-    # add a function ft_error to exit the program after each raise / from typing import noreturn
-
 
 def retrieve_raw_data(config_file: str) -> dict[str, typing.Any]:
     raw_config: dict[str, typing.Any] = {}
@@ -44,4 +42,5 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
                          ">= 10 in <config_file>.")
     perfect: str = dict_config.get("PERFECT", "").lower()
     if perfect not in ("true", "false"):
-        raise ValueError("Error: PERFECT must be 'true' or 'false' in <config_file>.")
+        raise ValueError("Error: PERFECT must be 'true' or"
+                         "'false' in <config_file>.")
