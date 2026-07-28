@@ -5,7 +5,7 @@ def check_args() -> None:
     if len(sys.argv) != 2:
         raise ValueError("Error: there must be only one argument!\nUsage: python3 a_maze_ing.py <config_file>.")
     if sys.argv[1] != "config.txt":
-        raise FileNotFoundError(f"Error: wrong name for <config_file>.")
+        raise FileNotFoundError("Error: wrong name for <config_file>.")
 
     # add a function ft_error to exit the program after each raise / from typing import noreturn
 
@@ -27,17 +27,3 @@ def check_data(raw_config: dict[str, typing.Any]) -> None:
         if key not in raw_config:
             raise KeyError("Error: one or more mandatory key(s) missing.")
     print(raw_config)
-
-
-
-def main() -> None:
-    check_args()
-    retrieve_data(sys.argv[1])
-    check_data(retrieve_data(sys.argv[1]))
-
-
-if __name__ == "__main__":
-    try:
-        main()
-    except (KeyError, ValueError, FileNotFoundError) as e:
-        print(e)
