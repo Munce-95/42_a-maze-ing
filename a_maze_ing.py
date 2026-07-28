@@ -12,6 +12,7 @@ def main() -> None:
     check_raw_data(retrieved_data)
     check_values(retrieved_data)
 
+
 if __name__ == "__main__":
     try:
         main()
