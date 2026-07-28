@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
-from parsing import *
+import sys
+import typing
+from parsing import check_raw_data, check_args, retrieve_raw_data
 
 
 def main() -> None:
     check_args()
-    retrieve_data(sys.argv[1])
-    check_data(retrieve_data(sys.argv[1]))
+    retrieved_data: dict[str, typing.Any] = retrieve_raw_data(sys.argv[1])
+    check_raw_data(retrieved_data)
 
 
 if __name__ == "__main__":
