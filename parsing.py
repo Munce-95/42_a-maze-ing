@@ -30,4 +30,13 @@ def check_raw_data(raw_config: dict[str, typing.Any]) -> None:
     for key in mandatory_keys:
         if key not in raw_config:
             raise KeyError("Error: one or more mandatory key(s) missing.")
-    print(raw_config)
+
+
+def check_values(dict_config: dict[str, typing.Any]) -> None:
+    try:
+        width: int = int(dict_config["WIDTH"])
+        height: int = int(dict_config["HEIGHT"])
+    except (TypeError, ValueError):
+        raise ValueError("Error: WIDTH and HEIGHT must be valid integers in <config_file>.")
+    if width < 10 or height < 10:
+        raise ValueError("Error: WIDTH and HEIGHT must be >= 10 in <config_file>.")
