@@ -1,76 +1,22 @@
-Le Papa pingouin, le Papa pingouin
-Le Papa, le Papa, le Papa pingouin
-Le Papa pingouin s'ennuie sur sa banquise
-Le Papa pingouin, le Papa pingouin
-Le Papa, le Papa, le Papa pingouin
-Le Papa pingouin voudrait faire sa valise
-On le sent nerveux
-Un peu malheureux
-Pas très bien dans ses plumes
-Pour se calmer les nerfs
-Il plonge dans la mer
-Il envie l'oiseau
-Qui s'en va là-haut du côté de la lune
-Lui qui a des pieds de plomb
-Ça le rend grognon
-Le Papa pingouin, le Papa pingouin
-Le Papa, le Papa, le Papa pingouin
-Le Papa pingouin s'ennuie sur sa banquise
-Sur la neige bleue
-Fait un pas douteux
-Et glisse sur la glace
-On l'entend murmurer
-Je veux m'en aller
-Très haut dans le ciel
-Plus près du soleil
-En traversant l'espace
-J'ai les ailes d'un oiseau
-Je peux voler haut
-Mais voyons, papa
-Pourquoi dis-tu ça?
-Tu sais bien que les ailes
-Celles des pingouins et des moulins
-Ne servent plus à rien
-Mais pourquoi, papa
-Aller là bas?
-Ici la vie est belle
-Laisse le ciel aux anges et aux saints
-Vient Papa
-Le Papa pingouin, le Papa pingouin
-Le Papa, le Papa, le Papa pingouin
-Le Papa pingouin poursuit son joli rêve
-Voilà qu'il se prend
-Pour un goéland
-Il fait de longs voyages
-Il descend vers le sud
-Jusqu'en Angleterre
-Et voici Paris
-Rome et Napoli
-Les rives de Carthage
-La Méditerranée
-Que c'est beau l'été
-Mais voyons Papa
-Pourquoi dis-tu ça?
-Tu sais bien que les ailes
-Celles des pingouins et des moulins
-Ne servent plus à rien
-Mais pourquoi, papa
-Aller là bas?
-Ici la vie est belle
-Si tu pars tu n'iras pas loin
-Reste là Papa
-Reste là Papa
-Le Papa pingouin, le Papa pingouin
-Le Papa, le Papa, le Papa pingouin
-Le Papa pingouin revient de ses chimères
-Le Papa pingouin, le Papa pingouin
-Le Papa, le Papa, le Papa pingouin
-Le Papa pingouin redescend sur la terre
-Le Papa pingouin, le Papa pingouin
-Le Papa, le Papa, le Papa pingouin
-Le Papa pingouin adore sa banquise
-Le Papa pingouin, le Papa pingouin
-Le Papa, le Papa, le Papa pingouin
-Le Papa pingouin va brûler sa valise
+*This project has been created as part of the 42 curriculum by celgremy & mgedeon.*
 
-boop
+# Description
+• A “Description” section that clearly presents the project, including its goal and a
+brief overview.
+# Instructions
+• An “Instructions” section containing any relevant information about compilation,
+installation, and/or execution.
+# Resources
+• A “Resources” section listing classic references related to the topic (documen-
+tation, articles, tutorials, etc.), as well as a description of how AI was used —
+specifying for which tasks and which parts of the project.
+
+## Config file's structure
+## Maze generation algorithm
+## Why did we chose this algorithm
+## What part of the code is reusable? How?
+## Team and project management:
+### Roles of each team member
+### Anticipated planning and how it evolved
+### What worked well and what could be improved
+### Did we use any specific tools? Which ones?
