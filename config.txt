@@ -1,7 +1,10 @@
-WIDTH=20
+WIDTH =10
+
 HEIGHT=20
-entry=3
+
+entry=3,0
 EXIT=6
-OUTPUT_FILE=maze_result.txt
+OUTPUT_FILE=test.txt 
 PERFECT=true
-PENGUIN = 12
+PENGUIN = 12   
+e=1
