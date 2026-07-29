@@ -14,8 +14,11 @@ def retrieve_raw_data(config_file: str) -> dict[str, typing.Any]:
     raw_config: dict[str, typing.Any] = {}
     with open(config_file) as f:
         for line in nonblank_lines(f):
-            key, value = line.split('=', 1)
-            raw_config.update({key.upper().strip(): value.strip()})
+            if line.startswith(' '):
+                raise KeyError("Error: keys cannot start with a space.")
+            else:
+                key, value = line.split('=', 1)
+                raw_config.update({key.upper().strip(): value.strip()})
     return raw_config
 
 
@@ -56,9 +59,9 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
 
 
 '''
-need to add exclusion of a parameter if the first character of the line in config.txt is #
-blank return lines to be ignored
-key should always start first char on the line  string.startswith('')
+need to add exclusion of a parameter if the first character of the line in config.txt is # - WIP
+blank return lines to be ignored  - OK
+key should always start first char on the line  string.startswith('') - OK
 PERFECT should be boolean, not str
 don't allow spaces before and after = and enforce .txt for OUTPUT_FILE and justify in readme.md
 if grid is too small, 42 is omitted and an error message (to stderr) is printed stating that 42 could not be printed
