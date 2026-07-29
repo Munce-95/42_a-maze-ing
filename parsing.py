@@ -16,6 +16,8 @@ def retrieve_raw_data(config_file: str) -> dict[str, typing.Any]:
         for line in nonblank_lines(f):
             if line.startswith(' '):
                 raise KeyError("Error: keys cannot start with a space.")
+            elif line.count('=') > 1:
+                raise ValueError("Error: there can only be one key/value pair per line.")
             else:
                 key, value = line.split('=', 1)
                 raw_config.update({key.upper().strip(): value.strip()})
@@ -54,15 +56,16 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
                          " >= 3 in <config_file>.")
     perfect: str = dict_config.get("PERFECT", "").lower()
     if perfect not in ("true", "false"):
-        raise ValueError("Error: PERFECT must be 'true' or"
-                         " 'false' in <config_file>.")
+        raise ValueError("Error: PERFECT must be 'True' or"
+                         " 'False' in <config_file>.")
+    dict_config["PERFECT"] = perfect == "true"
 
 
 '''
 need to add exclusion of a parameter if the first character of the line in config.txt is # - WIP
 blank return lines to be ignored  - OK
 key should always start first char on the line  string.startswith('') - OK
-PERFECT should be boolean, not str
+PERFECT should be boolean, not str - OK?
 don't allow spaces before and after = and enforce .txt for OUTPUT_FILE and justify in readme.md
 if grid is too small, 42 is omitted and an error message (to stderr) is printed stating that 42 could not be printed
 add an upper limit to X (50)

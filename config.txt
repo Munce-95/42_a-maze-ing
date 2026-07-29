@@ -1,8 +1,7 @@
-WIDTH =10
+WIDTH = 10
 HEIGHT=20
 entry=3,0
-EXIT=6
+EXIT=65 4
 OUTPUT_FILE=test.txt 
-PERFECT=true
+PERFECT=True
 PENGUIN = 12   
-e=1
