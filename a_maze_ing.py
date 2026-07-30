@@ -2,7 +2,7 @@
 
 import sys
 import typing
-from errors import exiting
+from errors import exit_program
 from parsing import check_raw_data, check_args, retrieve_raw_data, check_values
 
 
@@ -17,7 +17,7 @@ def main() -> None:
 if __name__ == "__main__":
     try:
         main()
-    except (TypeError, KeyError, ValueError, FileNotFoundError) as e:
-        exiting(str(e))
+    except (TypeError, IsADirectoryError, KeyError, ValueError, FileNotFoundError) as e:
+        exit_program(str(e))
     else:
         print("All good! ... for now")

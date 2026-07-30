@@ -1,4 +1,5 @@
 import sys
+import os.path
 import typing
 from utils import nonblank_lines
 
@@ -6,8 +7,10 @@ def check_args() -> None:
     if len(sys.argv) != 2:
         raise ValueError("Error: there must be only one argument!\n"
                          "Usage: python3 a_maze_ing.py <config_file>.")
-    if sys.argv[1] != "config.txt":
-        raise FileNotFoundError("Error: wrong name for <config_file>.")
+    if not os.path.exists(sys.argv[1]): 
+        raise FileNotFoundError(f"Error: file '{sys.argv[1]}' does not exist.")
+    if not os.path.isfile(sys.argv[1]):
+        raise IsADirectoryError(f"Error: '{sys.argv[1]}' is a directory.")
 
 
 def retrieve_raw_data(config_file: str) -> dict[str, typing.Any]:
@@ -20,16 +23,19 @@ def retrieve_raw_data(config_file: str) -> dict[str, typing.Any]:
                 raise ValueError("Error: there can only be one key/value pair per line.")
             else:
                 key, value = line.split('=', 1)
-                raw_config.update({key.upper().strip(): value.strip()})
+                if key.upper().strip() in raw_config:
+                    continue
+                else:
+                    raw_config.update({key.upper().strip(): value.strip()})
     return raw_config
 
 
 def check_raw_data(raw_config: dict[str, typing.Any]) -> None:
     if len(raw_config) < 6:
         raise ValueError("Error: there must be at least 6 keys"
-                         "in the <config_file>.")
+                         " in the <config_file>.")
 
-    # checking that parameters are only composed of letters or underscores
+    # checking that keys are only composed of letters or underscores
     for key in raw_config.keys():
         for c in key:
             if not (c.isalpha() or c == '_'):
@@ -54,11 +60,17 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
     if width < 3 or height < 3:
         raise ValueError("Error: WIDTH and HEIGHT must be"
                          " >= 3 in <config_file>.")
+
     perfect: str = dict_config.get("PERFECT", "").lower()
     if perfect not in ("true", "false"):
         raise ValueError("Error: PERFECT must be 'True' or"
                          " 'False' in <config_file>.")
     dict_config["PERFECT"] = perfect == "true"
+
+    output: str = dict_config["OUTPUT_FILE"]
+    if not output.endswith(".txt"):
+        raise KeyError("Error: <OUTPUT_FILE> should be a .txt")
+
 
 
 '''
