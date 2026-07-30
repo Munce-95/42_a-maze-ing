@@ -57,9 +57,9 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
     except (TypeError, ValueError):
         raise ValueError("Error: WIDTH and HEIGHT must"
                          " be valid integers in <config_file>.")
-    if width < 3 or height < 3:
+    if not 3 <= width <= 50 or not 3 <= height <= 50:
         raise ValueError("Error: WIDTH and HEIGHT must be"
-                         " >= 3 in <config_file>.")
+                         " >= 3 and <= 50 in <config_file>.")
 
     perfect: str = dict_config.get("PERFECT", "").lower()
     if perfect not in ("true", "false"):
@@ -69,7 +69,21 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
 
     output: str = dict_config["OUTPUT_FILE"]
     if not output.endswith(".txt"):
-        raise KeyError("Error: <OUTPUT_FILE> should be a .txt")
+        raise ValueError("Error: <OUTPUT_FILE> should be a .txt")
+
+    x, y = dict_config["ENTRY"].split(',', 1).strip()
+    print(x, y)
+#        try:
+#            x, y = dict_config["ENTRY"].split(',', 1).strip()
+#            dict_config["ENTRY"] = tuple(x,y)
+#        except ValueError:
+#            raise ValueError("Error: ENTRY and EXIT must be tuple(int, int)")
+#    try:
+#        entry_tup: tuple[int, int] = tuple(dict_config["ENTRY"])
+#        exit_tup: tuple[int, int] = tuple(dict_config["EXIT"])
+#    except ValueError:
+#        raise ValueError("Error: ENTRY and EXIT must be tuple[int, int]")
+    
 
 
 
@@ -85,4 +99,5 @@ in readme: state that < 3 creates a map that cannot be non-perfect
 make sure format for ENTRY and EXIT is tuple -> X,Y
 ENTRY and EXIT must be inside the maze and must not be the same and must not be inside 42
 the user cannot add or edit any parameter to config.txt
+import signal to catch ctrl + c
 '''
