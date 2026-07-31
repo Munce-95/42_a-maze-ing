@@ -71,8 +71,13 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
     if not output.endswith(".txt"):
         raise ValueError("Error: <OUTPUT_FILE> should be a .txt")
 
-    x, y = dict_config["ENTRY"].split(',', 1).strip()
-    print(x, y)
+
+    values = dict_config["ENTRY"].split(',', 1)
+    try:
+        entry = (int(values[0]), int(values[1]))
+    except ValueError as e:
+        raise ValueError("Error: Values for ENTRY must be valid integers (x, y)")
+    print(entry)
 #        try:
 #            x, y = dict_config["ENTRY"].split(',', 1).strip()
 #            dict_config["ENTRY"] = tuple(x,y)

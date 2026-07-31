@@ -1,6 +1,6 @@
 WIDTH = 10
 HEIGHT=20
-entry=3,0
+entry=3           ,0
 width   =18
 EXIT=4
 OUTPUT_FILE=test.txt 
