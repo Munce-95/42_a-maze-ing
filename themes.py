@@ -23,6 +23,8 @@ class Theme(NamedTuple):
 THEMES = [
     Theme(RGB(42, 42, 42), RGB(85, 60, 100), RGB(200, 200, 200)),
     Theme(RGB(50, 5, 85), RGB(253, 0, 219), RGB(100, 30, 90)),
+    Theme(RGB(15, 23, 42), RGB(6, 182, 212), RGB(241, 245, 249)),
+    Theme(RGB(10, 10, 10), RGB(20, 80, 20), RGB(100, 255, 100)),
     Theme(RGB(0, 75, 15), RGB(10, 130, 30), RGB(210, 10, 175))
 ]
 
