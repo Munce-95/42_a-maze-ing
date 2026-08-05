@@ -7,3 +7,12 @@ OUTPUT_FILE=test.txt
 PERFECT=True
 PENGUIN = 12
 hugs=56098
+
+
+
+// Pour la selection de theme :
+// Avoir une key "THEME" allant de 0 a nb_theme-1 (surement 5)
+// 42 / Coeur / Pingouin / C / M / Sans
+// Avec 0 == PATTERN_42
+// Pour pouvoir naviguer plus tard entre les thèmes (?)
+// Sauf si j'ai mal compris le fonctionnement du switch
