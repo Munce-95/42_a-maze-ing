@@ -43,10 +43,11 @@ def apply_42_pattern(
         width: int, height: int) -> bool:
     global current_bg_list
     pattern = random.choice(pattern_list)
+    if pattern == PATTERN_SANS and (WIDTH < 20 or HEIGHT < 20):
+        while (pattern == PATTERN_SANS) == True:
+            pattern = random.choice(pattern_list)
     is_sans = (pattern == PATTERN_SANS)
     current_bg_list = get_bg_list_for_pattern(pattern, is_sans)
-
-    # 3. Application du motif sur la grille
     pat_h = len(pattern)
     pat_w = len(pattern[0])
     start_x = (width - pat_w) // 2
@@ -135,18 +136,26 @@ def build_matrix_1x1(
         for x in range(width):
             for y in range(height):
                 cell = grid[x][y]
-                if cell.is_blocked:
+                if cell.is_blocked or cell.in_symbol:
                     rx = x * 2 + 1
                     ry = y * 2 + 1
-                    if x + 1 < width and grid[x + 1][y].is_blocked:
-                        output_grid[ry][rx + 1] = "L"
-                    if y + 1 < height and grid[x][y + 1].is_blocked:
-                        output_grid[ry + 1][rx] = "L"
-                    if (x + 1 < width and y + 1 < height and
-                        grid[x + 1][y].is_blocked and
-                        grid[x][y + 1].is_blocked and
-                        grid[x + 1][y + 1].is_blocked):
-                        output_grid[ry + 1][rx + 1] = "L"
+                    char = "#" if cell.is_blocked else "O"
+                    output_grid[ry][rx] = char
+                    output_grid[ry][rx + 1] = char
+                    output_grid[ry + 1][rx] = char
+                    output_grid[ry + 1][rx + 1] = char
+                    if x + 1 < width and (
+                        (cell.is_blocked and grid[x + 1][y].is_blocked) or
+                        (cell.in_symbol and grid[x + 1][y].in_symbol)
+                    ):
+                        output_grid[ry][rx + 2] = char
+                        output_grid[ry + 1][rx + 2] = char
+                    if y + 1 < height and (
+                        (cell.is_blocked and grid[x][y + 1].is_blocked) or
+                        (cell.in_symbol and grid[x][y + 1].in_symbol)
+                    ):
+                        output_grid[ry + 2][rx] = char
+                        output_grid[ry + 2][rx + 1] = char
     return output_grid, render_w, render_h
 
 
@@ -170,7 +179,7 @@ def render_terminal_blocks(
     
 
 if __name__ == "__main__":
-    WIDTH, HEIGHT = 20, 20
+    WIDTH, HEIGHT = 15, 20
     maze, is_sans = generate_wilson(WIDTH, HEIGHT)
     matrix, r_w, r_h = build_matrix_1x1(maze, WIDTH, HEIGHT, is_sans=is_sans)
     render_terminal_blocks(matrix, r_w, r_h)
