@@ -1,11 +1,7 @@
 from typing import NamedTuple
 import random
 
-
-COLOR_RESET = "\033[0m"
 BG_CORE = "\033[48;2;255;255;255m"
-
-bg_list = []
 
 class RGB(NamedTuple):
     r: int
@@ -33,3 +29,5 @@ current_theme = random.choice(THEMES)
 BG_WALL = current_theme.wall.to_ansi()
 BG_LOGO = current_theme.logo.to_ansi()
 BG_PATH = current_theme.path.to_ansi()
+
+bg_list = [BG_WALL, BG_LOGO, BG_CORE, BG_PATH]
