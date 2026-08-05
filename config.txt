@@ -1,7 +1,9 @@
-WIDTH=20
+WIDTH = 10
 HEIGHT=20
-ENTRY=3
-EXIT=6
-OUTPUT_FILE=maze_result.txt
-PERFECT=0
+entry=3,0
+width   =18
+EXIT=4
+OUTPUT_FILE=test.txt 
+PERFECT=True
 PENGUIN = 12
+hugs=56098
