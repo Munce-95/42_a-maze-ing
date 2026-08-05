@@ -1,7 +1,6 @@
-WIDTH = 10
+WIDTH=10
 HEIGHT=20
-entry=3,0
-width   =18
+ENTRY=3,0
 EXIT=4
 OUTPUT_FILE=test.txt 
 PERFECT=True

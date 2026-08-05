@@ -43,9 +43,16 @@ PATTERN_MATT = [
     [0, 1, 0, 0, 0, 1, 0]
 ]
 
+PATTERN_SANS = [
+    [0, 1, 1, 1, 0],
+    [0, 1, 1, 1, 0],
+    [0, 1, 1, 1, 0]
+]
+
 pattern_list = [
     PATTERN_42,
     PATTERN_HEART,
     PATTERN_PENGUIN,
     PATTERN_CEL,
-    PATTERN_MATT]
+    PATTERN_MATT,
+    PATTERN_SANS]
