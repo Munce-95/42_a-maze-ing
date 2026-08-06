@@ -63,4 +63,9 @@ PATTERN_SANS = [
 ]
 
 pattern_list = [
+    PATTERN_42,
+    PATTERN_HEART,
+    PATTERN_PENGUIN,
+    PATTERN_CEL,
+    PATTERN_MATT,
     PATTERN_SANS]
