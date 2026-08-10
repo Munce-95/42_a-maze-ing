@@ -17,7 +17,11 @@ def main() -> None:
 if __name__ == "__main__":
     try:
         main()
-    except (TypeError, IsADirectoryError, KeyError, ValueError, FileNotFoundError) as e:
+    except (TypeError,
+            IsADirectoryError,
+            KeyError,
+            ValueError,
+            FileNotFoundError) as e:
         exit_program(str(e))
     else:
         print("All good! ... for now")

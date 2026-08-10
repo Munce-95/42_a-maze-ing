@@ -3,11 +3,12 @@ import os.path
 import typing
 from utils import nonblank_lines
 
+
 def check_args() -> None:
     if len(sys.argv) != 2:
         raise ValueError("Error: there must be only one argument!\n"
                          "Usage: python3 a_maze_ing.py <config_file>.")
-    if not os.path.exists(sys.argv[1]): 
+    if not os.path.exists(sys.argv[1]):
         raise FileNotFoundError(f"Error: file '{sys.argv[1]}' does not exist.")
     if not os.path.isfile(sys.argv[1]):
         raise IsADirectoryError(f"Error: '{sys.argv[1]}' is a directory.")
@@ -20,7 +21,8 @@ def retrieve_raw_data(config_file: str) -> dict[str, typing.Any]:
             if line.startswith(' '):
                 raise KeyError("Error: keys cannot start with a space.")
             elif line.count('=') > 1:
-                raise ValueError("Error: there can only be one key/value pair per line.")
+                raise ValueError("Error: there can only be one"
+                                 " key/value pair per line.")
             else:
                 key, value = line.split('=', 1)
                 if key.upper().strip() in raw_config:
@@ -71,13 +73,20 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
     if not output.endswith(".txt"):
         raise ValueError("Error: <OUTPUT_FILE> should be a .txt")
 
-
     values = dict_config["ENTRY"].split(',', 1)
     try:
         entry = (int(values[0]), int(values[1]))
-    except ValueError as e:
-        raise ValueError("Error: Values for ENTRY must be valid integers (x, y)")
-    print(entry)
+    except ValueError:
+        raise ValueError("Error: Values for ENTRY"
+                         " must be valid integers (x, y)")
+    print("Entry is", entry)
+    values = dict_config["EXIT"].split(',', 1)
+    try:
+        coord_exit = (int(values[0]), int(values[1]))
+    except ValueError:
+        raise ValueError("Error: Values for EXIT"
+                         " must be valid integers (x, y)")
+    print("Exit is", coord_exit)
 #        try:
 #            x, y = dict_config["ENTRY"].split(',', 1).strip()
 #            dict_config["ENTRY"] = tuple(x,y)
@@ -88,7 +97,7 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
 #        exit_tup: tuple[int, int] = tuple(dict_config["EXIT"])
 #    except ValueError:
 #        raise ValueError("Error: ENTRY and EXIT must be tuple[int, int]")
-    
+ 
 
 
 
@@ -105,4 +114,11 @@ make sure format for ENTRY and EXIT is tuple -> X,Y
 ENTRY and EXIT must be inside the maze and must not be the same and must not be inside 42
 the user cannot add or edit any parameter to config.txt
 import signal to catch ctrl + c
+
+// Pour la selection de theme :
+// Avoir une key "THEME" allant de 0 a nb_theme-1 (surement 5)
+// 42 / Coeur / Pingouin / C / M / Sans
+// Avec 0 == PATTERN_42
+// Pour pouvoir naviguer plus tard entre les thèmes (?)
+// Sauf si j'ai mal compris le fonctionnement du switch
 '''
