@@ -1,4 +1,4 @@
-WIDTH = 20
+WIDTH = 10
 HEIGHT=20
 entry=3,6
 width   =18
