@@ -18,7 +18,9 @@ def retrieve_raw_data(config_file: str) -> dict[str, typing.Any]:
     raw_config: dict[str, typing.Any] = {}
     with open(config_file) as f:
         for line in nonblank_lines(f):
-            if line.startswith(' '):
+            if line.startswith('#'):
+                continue
+            elif line.startswith(' '):
                 raise KeyError("Error: keys cannot start with a space.")
             elif line.count('=') > 1:
                 raise ValueError("Error: there can only be one"
@@ -33,6 +35,7 @@ def retrieve_raw_data(config_file: str) -> dict[str, typing.Any]:
 
 
 def check_raw_data(raw_config: dict[str, typing.Any]) -> None:
+    print("Raw config is", raw_config)
     if len(raw_config) < 6:
         raise ValueError("Error: there must be at least 6 keys"
                          " in the <config_file>.")
@@ -74,19 +77,20 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
         raise ValueError("Error: <OUTPUT_FILE> should be a .txt")
 
     values = dict_config["ENTRY"].split(',', 1)
+    if len(values) != 2:
+        raise ValueError("Error: format for ENTRY must be <entry=x, y>.")
     try:
-        entry = (int(values[0]), int(values[1]))
+        entry_coords = (int(values[0]), int(values[1]))
     except ValueError:
-        raise ValueError("Error: Values for ENTRY"
-                         " must be valid integers (x, y)")
-    print("Entry is", entry)
+        raise ValueError("Error: Values for ENTRY must be valid integers.")
+
     values = dict_config["EXIT"].split(',', 1)
+    if len(values) != 2:
+        raise ValueError("Error: format for EXIT must be <exit=x, y>.")
     try:
-        coord_exit = (int(values[0]), int(values[1]))
+        exit_coords = (int(values[0]), int(values[1]))
     except ValueError:
-        raise ValueError("Error: Values for EXIT"
-                         " must be valid integers (x, y)")
-    print("Exit is", coord_exit)
+        raise ValueError("Error: Values for EXIT must be valid integers.")
 #        try:
 #            x, y = dict_config["ENTRY"].split(',', 1).strip()
 #            dict_config["ENTRY"] = tuple(x,y)
@@ -104,7 +108,7 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
 '''
 need to add exclusion of a parameter if the first character of the line in config.txt is # - WIP
 blank return lines to be ignored  - OK
-key should always start first char on the line  string.startswith('') - OK
+key should always start first char on the line  string.startswith('') + put in README that it is deliberate for lines starting with spaces to raise an error - OK missing README
 PERFECT should be boolean, not str - OK?
 don't allow spaces before and after = and enforce .txt for OUTPUT_FILE and justify in readme.md
 if grid is too small, 42 is omitted and an error message (to stderr) is printed stating that 42 could not be printed
