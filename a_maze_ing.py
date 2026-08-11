@@ -11,7 +11,6 @@ def main() -> None:
     retrieved_data: dict[str, typing.Any] = retrieve_raw_data(sys.argv[1])
     check_raw_data(retrieved_data)
     check_values(retrieved_data)
-    print(retrieved_data)
 
 
 if __name__ == "__main__":
