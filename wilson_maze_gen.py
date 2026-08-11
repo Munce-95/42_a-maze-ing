@@ -16,6 +16,7 @@ class Cell:
         self.walls = {'N': True, 'E': True, 'S': True, 'W': True}
         self.is_blocked = False
         self.in_symbol = False
+        self.sans_eye = False
 
 
 def remove_wall(
@@ -23,7 +24,6 @@ def remove_wall(
         cell2: Cell) -> None:
     dx = cell2.x - cell1.x
     dy = cell2.y - cell1.y
-
     if dx == 1:
         cell1.walls['E'] = False
         cell2.walls['W'] = False
@@ -44,6 +44,8 @@ def apply_42_pattern(
     global current_bg_list
     pattern = random.choice(pattern_list)
     if pattern == PATTERN_SANS and (WIDTH < 20 or HEIGHT < 20):
+        if len(pattern_list) < 2:
+            return f"Can't generate pattern"
         while (pattern == PATTERN_SANS) == True:
             pattern = random.choice(pattern_list)
     is_sans = (pattern == PATTERN_SANS)
@@ -58,6 +60,8 @@ def apply_42_pattern(
                 grid[start_x + px][start_y + py].is_blocked = True
             elif pattern[py][px] == 2:
                 grid[start_x + px][start_y + py].in_symbol = True
+            elif pattern[py][px] == 3:
+                grid[start_x + px][start_y + py].sans_eye = True
     return is_sans
 
 
@@ -74,7 +78,8 @@ def get_unblocked_neighbors(
                 0 <= nx < width
                 and 0 <= ny < height
                 and not grid[nx][ny].is_blocked
-                and not grid[nx][ny].in_symbol):
+                and not grid[nx][ny].in_symbol
+                and not grid[nx][ny].sans_eye):
             neighbors.append(grid[nx][ny])
     return neighbors
 
@@ -87,7 +92,10 @@ def generate_wilson(
     unvisited = [
         grid[x][y] for x in range(width)
         for y in range(height)
-        if not grid[x][y].is_blocked and not grid[x][y].in_symbol]
+        if (
+            not grid[x][y].is_blocked
+            and not grid[x][y].in_symbol
+            and not grid[x][y].sans_eye)]
     if not unvisited:
         return grid
     first_cell = random.choice(unvisited)
@@ -126,6 +134,8 @@ def build_matrix_1x1(
                 output_grid[ry][rx] = "L"
             elif cell.in_symbol:
                 output_grid[ry][rx] = "O"
+            elif cell.sans_eye:
+                output_grid[ry][rx] = "Y"
             else:
                 output_grid[ry][rx] = " "
                 if not cell.walls['E']:
@@ -136,23 +146,30 @@ def build_matrix_1x1(
         for x in range(width):
             for y in range(height):
                 cell = grid[x][y]
-                if cell.is_blocked or cell.in_symbol:
+                if cell.is_blocked or cell.in_symbol or cell.sans_eye:
                     rx = x * 2 + 1
                     ry = y * 2 + 1
-                    char = "#" if cell.is_blocked else "O"
+                    if cell.is_blocked:
+                        char = "#"
+                    elif cell.sans_eye:
+                        char = "Y"
+                    else:
+                        char = "O"
                     output_grid[ry][rx] = char
                     output_grid[ry][rx + 1] = char
                     output_grid[ry + 1][rx] = char
                     output_grid[ry + 1][rx + 1] = char
                     if x + 1 < width and (
                         (cell.is_blocked and grid[x + 1][y].is_blocked) or
-                        (cell.in_symbol and grid[x + 1][y].in_symbol)
+                        (cell.in_symbol and grid[x + 1][y].in_symbol) or
+                        (cell.sans_eye and grid[x + 1][y].sans_eye)
                     ):
                         output_grid[ry][rx + 2] = char
                         output_grid[ry + 1][rx + 2] = char
                     if y + 1 < height and (
                         (cell.is_blocked and grid[x][y + 1].is_blocked) or
-                        (cell.in_symbol and grid[x][y + 1].in_symbol)
+                        (cell.in_symbol and grid[x][y + 1].in_symbol) or
+                        (cell.sans_eye and grid[x][y + 1].sans_eye)
                     ):
                         output_grid[ry + 2][rx] = char
                         output_grid[ry + 2][rx + 1] = char
@@ -173,13 +190,15 @@ def render_terminal_blocks(
                 line += current_bg_list[1] + "  " + "\033[0m"
             elif char == "O":
                 line += current_bg_list[2] + "  " + "\033[0m"
+            elif char == "Y":
+                line += "\033[48;2;71;130;201m" + "  " + "\033[0m"
             else:
                 line += current_bg_list[3] + "  " + "\033[0m"
         print(line)
     
 
 if __name__ == "__main__":
-    WIDTH, HEIGHT = 20, 20
+    WIDTH, HEIGHT = 50, 50
     maze, is_sans = generate_wilson(WIDTH, HEIGHT)
     matrix, r_w, r_h = build_matrix_1x1(maze, WIDTH, HEIGHT, is_sans=is_sans)
     render_terminal_blocks(matrix, r_w, r_h)
