@@ -99,7 +99,7 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
         raise ValueError("Error: Values for EXIT must be valid integers.")
 
     # making sure that ENTRY and EXIT are not where the 42 pattern is going to be
-    if exit_coords[0] 
+    if exit_coords[0]
 
     print(dict_config)
 
