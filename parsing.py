@@ -66,16 +66,19 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
         raise ValueError("Error: WIDTH and HEIGHT must be"
                          " >= 3 and <= 50 in <config_file>.")
 
+    # checking that PERFECT only accepts "true" or "false" and make it a boolean
     perfect: str = dict_config.get("PERFECT", "").lower()
     if perfect not in ("true", "false"):
         raise ValueError("Error: PERFECT must be 'True' or"
                          " 'False' in <config_file>.")
     dict_config["PERFECT"] = perfect == "true"
 
+    # checking that the output file is a .txt
     output: str = dict_config["OUTPUT_FILE"]
     if not output.endswith(".txt"):
         raise ValueError("Error: <OUTPUT_FILE> should be a .txt")
 
+    # checking that ENTRY has 2 valid integers and making them a tuple[int, int]
     values = dict_config["ENTRY"].split(',', 1)
     if len(values) != 2:
         raise ValueError("Error: format for ENTRY must be <entry=x, y>.")
@@ -85,6 +88,7 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
     except ValueError:
         raise ValueError("Error: Values for ENTRY must be valid integers.")
 
+    # checking that EXIT has 2 valid integers and making them a tuple[int, int]
     values = dict_config["EXIT"].split(',', 1)
     if len(values) != 2:
         raise ValueError("Error: format for EXIT must be <exit=x, y>.")
@@ -93,17 +97,12 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
         dict_config.update({"EXIT": exit_coords})
     except ValueError:
         raise ValueError("Error: Values for EXIT must be valid integers.")
+
+    # making sure that ENTRY and EXIT are not where the 42 pattern is going to be
+    if exit_coords[0] 
+
     print(dict_config)
-#        try:
-#            x, y = dict_config["ENTRY"].split(',', 1).strip()
-#            dict_config["ENTRY"] = tuple(x,y)
-#        except ValueError:
-#            raise ValueError("Error: ENTRY and EXIT must be tuple(int, int)")
-#    try:
-#        entry_tup: tuple[int, int] = tuple(dict_config["ENTRY"])
-#        exit_tup: tuple[int, int] = tuple(dict_config["EXIT"])
-#    except ValueError:
-#        raise ValueError("Error: ENTRY and EXIT must be tuple[int, int]")
+
  
 
 
@@ -128,4 +127,7 @@ import signal to catch ctrl + c
 // Avec 0 == PATTERN_42
 // Pour pouvoir naviguer plus tard entre les thèmes (?)
 // Sauf si j'ai mal compris le fonctionnement du switch
+
+
+pour le 42: WIDHT x HEIGHT
 '''
