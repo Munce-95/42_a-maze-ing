@@ -1,7 +1,7 @@
 import sys
 import os.path
 import typing
-from utils import nonblank_lines
+from utils import nonblank_lines, get_coords_pattern
 
 
 def check_args() -> None:
@@ -99,7 +99,16 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
         raise ValueError("Error: Values for EXIT must be valid integers.")
 
     # making sure that ENTRY and EXIT are not where the 42 pattern is going to be
-    if exit_coords[0]
+    pattern_h: int = 7
+    pattern_w: int = 6
+    coords: dict[str, int] = get_coords_pattern(height, width, pattern_h, pattern_w)
+    if (coords["start_x"] <= entry_coords[0] < coords["end_x"] \
+       and coords["start_y"] <= entry_coords[1] < coords["end_y"]) \
+       or (coords["start_x"] <= exit_coords[0] < coords["end_x"] \
+       and coords["start_y"] <= exit_coords[1] < coords["end_y"]):
+        raise ValueError(f"Error: values for ENTRY and EXIT must be outside"
+                         f" ({coords['start_x']}, {coords['start_y']})"
+                         f" and ({coords['end_x']}, {coords['end_y']})")
 
     print(dict_config)
 

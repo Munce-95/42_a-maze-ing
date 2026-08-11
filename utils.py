@@ -22,7 +22,3 @@ def get_coords_pattern(height: int,
     for i, key in enumerate(keys):
         coords_pattern[key] = coords[i]
     return coords_pattern
-
-
-if __name__ == "__main__":
-    get_coords_pattern(20, 20, 7, 6)
