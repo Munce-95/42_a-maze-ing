@@ -2,7 +2,6 @@ import sys
 import os
 import typing
 from utils_files.utils import nonblank_lines, get_coords_pattern
-from typing import NamedTuple
 from utils_files.data import Data
 
 
