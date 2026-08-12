@@ -1,5 +1,4 @@
 import random
-from utils_files import parsed_value
 from typing import List, Tuple
 from utils_files.pattern import pattern_list, PATTERN_SANS
 from utils_files.themes import get_bg_list_for_pattern
@@ -197,6 +196,10 @@ def render_terminal_blocks(
                 line += current_bg_list[3] + "  " + "\033[0m"
         print(line)
     
+def wilson_main(width: int, height:int) -> None:
+    maze, is_sans = generate_wilson(width, height)
+    matrix, r_w, r_h = build_matrix_1x1(maze, width, height, is_sans=is_sans)
+    render_terminal_blocks(matrix, r_w, r_h)
 
 if __name__ == "__main__":
     WIDTH, HEIGHT = 50, 50

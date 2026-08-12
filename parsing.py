@@ -1,7 +1,7 @@
 import sys
 import os
 import typing
-from utils import nonblank_lines, get_coords_pattern
+from utils_files.utils import nonblank_lines, get_coords_pattern
 from typing import NamedTuple
 
 
@@ -56,7 +56,7 @@ def check_raw_data(raw_config: dict[str, typing.Any]) -> None:
             raise KeyError("Error: one or more mandatory key(s) missing.")
 
 
-def check_values(dict_config: dict[str, typing.Any]) -> NamedTuple:
+def check_values(dict_config: dict[str, typing.Any]) -> None:
     try:
         width: int = int(dict_config["WIDTH"])
         height: int = int(dict_config["HEIGHT"])
@@ -126,8 +126,6 @@ def check_values(dict_config: dict[str, typing.Any]) -> NamedTuple:
                          f" ({coords['start_x']}, {coords['start_y']})"
                          f" and ({coords['end_x']}, {coords['end_y']})")
 
-    parsed_values = namedtuple("WIDTH", [width], "HEIGHT", [height])
-    return parsed_values
 
 
 
