@@ -2,6 +2,7 @@ import random
 from typing import List, Tuple, NamedTuple
 from utils_files.pattern import pattern_list, PATTERN_SANS, PATTERN_PENGUIN
 from utils_files.themes import get_bg_list_for_pattern
+from algorithms.dijkstra import solve_dijkstra, mark_path_in_matrix
 
 
 current_bg_list: List[str] = []
@@ -50,7 +51,6 @@ def apply_42_pattern(
         if len(pattern_list) < 3:
             return f"Can't generate pattern"
         pattern = random.choice(pattern_list)
-            
     is_sans = (pattern == PATTERN_SANS)
     current_bg_list = get_bg_list_for_pattern(pattern, is_sans)
     pat_h = len(pattern)
@@ -58,6 +58,8 @@ def apply_42_pattern(
     start_x = (width - pat_w) // 2
     start_y = (height - pat_h) // 2
     for py in range(pat_h):
+        if (width < 10 or height < 10):
+            break
         for px in range(pat_w):
             if pattern[py][px] == 1:
                 grid[start_x + px][start_y + py].is_blocked = True
@@ -91,10 +93,7 @@ def generate_wilson(
         width: int,
         height: int) -> List[List[Cell]]:
     grid = [[Cell(x, y) for y in range(height)] for x in range(width)]
-    pat = False
-    if (width >= 10 and height >= 10):
-        pat= apply_42_pattern(grid, width, height)
-    is_sans = pat
+    is_sans = apply_42_pattern(grid, width, height)
     unvisited = [
         grid[x][y] for x in range(width)
         for y in range(height)
@@ -103,7 +102,7 @@ def generate_wilson(
             and not grid[x][y].in_symbol
             and not grid[x][y].sans_eye)]
     if not unvisited:
-        return grid
+        return grid, is_sans
     first_cell = random.choice(unvisited)
     unvisited.remove(first_cell)
     while unvisited:
@@ -198,6 +197,8 @@ def render_terminal_blocks(
                 line += current_bg_list[2] + "  " + "\033[0m"
             elif char == "Y":
                 line += "\033[48;2;71;130;201m" + "  " + "\033[0m"
+            elif char == ".":
+                line += "\033[48;2;230;50;50m" + "  " + "\033[0m"
             else:
                 line += current_bg_list[3] + "  " + "\033[0m"
         print(line)
@@ -206,6 +207,8 @@ def wilson_main(parsed: NamedTuple) -> None:
     WIDTH, HEIGHT = parsed.width, parsed.height
     maze, is_sans = generate_wilson(WIDTH, HEIGHT)
     matrix, r_w, r_h = build_matrix_1x1(maze, WIDTH, HEIGHT, is_sans=is_sans)
+    path = solve_dijkstra(maze, parsed)
+    mark_path_in_matrix(matrix, path)
     render_terminal_blocks(matrix, r_w, r_h)
 
 '''if __name__ == "__main__":
