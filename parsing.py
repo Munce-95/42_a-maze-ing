@@ -3,7 +3,7 @@ import os
 import typing
 from utils_files.utils import nonblank_lines, get_coords_pattern
 from typing import NamedTuple
-from utils_files import Data
+from utils_files.data import Data
 
 
 def check_args() -> None:
