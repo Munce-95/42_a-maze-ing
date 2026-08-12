@@ -196,8 +196,8 @@ def render_terminal_blocks(
                 line += current_bg_list[3] + "  " + "\033[0m"
         print(line)
     
-def wilson_main(width: int, height:int) -> None:
-    WIDTH, HEIGHT = width, height
+def wilson_main(parsed) -> None:
+    WIDTH, HEIGHT = parsed.width, parsed.height
     maze, is_sans = generate_wilson(WIDTH, HEIGHT)
     matrix, r_w, r_h = build_matrix_1x1(maze, WIDTH, HEIGHT, is_sans=is_sans)
     render_terminal_blocks(matrix, r_w, r_h)
