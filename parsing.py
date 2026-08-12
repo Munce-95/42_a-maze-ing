@@ -1,7 +1,7 @@
 import sys
 import os.path
 import typing
-from utils import nonblank_lines
+from utils_files.utils import nonblank_lines
 
 def check_args() -> None:
     if len(sys.argv) != 2:
