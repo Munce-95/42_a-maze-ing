@@ -82,7 +82,7 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
     # checking that options only accepts "true" or
     # "false", make them booleans
     # and ensure that there can't be more than one "true"
-
+    patterns: list[str] = 
     # checking that the output file is a .txt
     output: str = dict_config["OUTPUT_FILE"]
     if not output.endswith(".txt"):
@@ -127,7 +127,7 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
     else:
         # making sure that ENTRY and EXIT are not
         # where the 42 pattern is going to be
-        pattern_h: int = 7
+        pattern_h: int = 7 # take from patterns
         pattern_w: int = 6
         coords: dict[str, int] = \
             get_coords_pattern(height, width, pattern_h, pattern_w)
@@ -163,6 +163,8 @@ make sure format for ENTRY and EXIT is tuple -> X,Y - OK
 ENTRY and EXIT must be inside the maze and must not be the same and must not be inside 42 - OK
 the user cannot add or edit any parameter to config.txt
 import signal to catch ctrl + c
+
+when SANS is TRUE we override ENTRY and EXIT with hardcoding to avoid pattern
 
 // Pour la selection de theme :
 // Avoir une key "THEME" allant de 0 a nb_theme-1 (surement 5)
