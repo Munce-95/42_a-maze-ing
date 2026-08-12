@@ -2,11 +2,8 @@ import sys
 import os
 import typing
 from utils_files.utils import nonblank_lines, get_coords_pattern
-<<<<<<< HEAD
 from typing import NamedTuple
-=======
 from utils_files import Data
->>>>>>> main
 
 
 def check_args() -> None:
