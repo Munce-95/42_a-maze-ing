@@ -3,6 +3,9 @@ import os
 import typing
 from utils_files.utils import nonblank_lines, get_coords_pattern
 from utils_files.data import Data
+from utils_files.pattern import pattern_list
+
+MIN_DISPLAY_SIZE = 10
 
 
 def check_args() -> None:
@@ -114,19 +117,23 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
     if entry_coords == exit_coords:
         raise ValueError("Error: ENTRY and EXIT cannot be the same.")
 
-    # making sure that ENTRY and EXIT are not
-    # where the 42 pattern is going to be
-    pattern_h: int = 7
-    pattern_w: int = 6
-    coords: dict[str, int] = \
-        get_coords_pattern(height, width, pattern_h, pattern_w)
-    if (coords["start_x"] <= entry_coords[0] < coords["end_x"]
-       and coords["start_y"] <= entry_coords[1] < coords["end_y"]) \
-       or (coords["start_x"] <= exit_coords[0] < coords["end_x"]
-       and coords["start_y"] <= exit_coords[1] < coords["end_y"]):
-        raise ValueError(f"Error: values for ENTRY and EXIT must be outside"
-                         f" ({coords['start_x']}, {coords['start_y']})"
-                         f" and ({coords['end_x']}, {coords['end_y']})")
+    # checking if pattern is displayable
+    if height < MIN_DISPLAY_SIZE or width < MIN_DISPLAY_SIZE:
+        print("Warning: the grid is too small to display the pattern", file=sys.stderr)
+    else:
+        # making sure that ENTRY and EXIT are not
+        # where the 42 pattern is going to be
+        pattern_h: int = 7
+        pattern_w: int = 6
+        coords: dict[str, int] = \
+            get_coords_pattern(height, width, pattern_h, pattern_w)
+        if (coords["start_x"] <= entry_coords[0] < coords["end_x"]
+        and coords["start_y"] <= entry_coords[1] < coords["end_y"]) \
+        or (coords["start_x"] <= exit_coords[0] < coords["end_x"]
+        and coords["start_y"] <= exit_coords[1] < coords["end_y"]):
+            raise ValueError(f"Error: values for ENTRY and EXIT must be outside"
+                            f" ({coords['start_x']}, {coords['start_y']})"
+                            f" and ({coords['end_x']}, {coords['end_y']})")
 
 
 def get_parsed_values(dict_config: dict[str, typing.Any]) -> Data:
@@ -152,6 +159,7 @@ make sure format for ENTRY and EXIT is tuple -> X,Y - OK
 ENTRY and EXIT must be inside the maze and must not be the same and must not be inside 42 - OK
 the user cannot add or edit any parameter to config.txt
 import signal to catch ctrl + c
+if grid is < 8,6 -> error message to not display pattern
 
 // Pour la selection de theme :
 // Avoir une key "THEME" allant de 0 a nb_theme-1 (surement 5)
