@@ -1,4 +1,4 @@
-WIDTH=10
+WIDTH=20
 HEIGHT=20
 entry=1,6
 EXIT=1,7

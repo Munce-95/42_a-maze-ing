@@ -197,8 +197,9 @@ def render_terminal_blocks(
         print(line)
     
 def wilson_main(width: int, height:int) -> None:
-    maze, is_sans = generate_wilson(width, height)
-    matrix, r_w, r_h = build_matrix_1x1(maze, width, height, is_sans=is_sans)
+    WIDTH, HEIGHT = width, height
+    maze, is_sans = generate_wilson(WIDTH, HEIGHT)
+    matrix, r_w, r_h = build_matrix_1x1(maze, WIDTH, HEIGHT, is_sans=is_sans)
     render_terminal_blocks(matrix, r_w, r_h)
 
 if __name__ == "__main__":
