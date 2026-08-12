@@ -91,8 +91,10 @@ def generate_wilson(
         width: int,
         height: int) -> List[List[Cell]]:
     grid = [[Cell(x, y) for y in range(height)] for x in range(width)]
-    if (width >= 8 and height >= 7):
-        is_sans = apply_42_pattern(grid, width, height)
+    pat = False
+    if (width >= 10 and height >= 10):
+        pat= apply_42_pattern(grid, width, height)
+    is_sans = pat
     unvisited = [
         grid[x][y] for x in range(width)
         for y in range(height)
