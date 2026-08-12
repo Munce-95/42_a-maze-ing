@@ -2,7 +2,11 @@ import sys
 import os
 import typing
 from utils_files.utils import nonblank_lines, get_coords_pattern
+<<<<<<< HEAD
 from typing import NamedTuple
+=======
+from utils_files import Data
+>>>>>>> main
 
 
 def check_args() -> None:
@@ -36,7 +40,6 @@ def retrieve_raw_data(config_file: str) -> dict[str, typing.Any]:
 
 
 def check_raw_data(raw_config: dict[str, typing.Any]) -> None:
-    print("Raw config is", raw_config)
     if len(raw_config) < 6:
         raise ValueError("Error: there must be at least 6 keys"
                          " in the <config_file>.")
@@ -59,7 +62,9 @@ def check_raw_data(raw_config: dict[str, typing.Any]) -> None:
 def check_values(dict_config: dict[str, typing.Any]) -> None:
     try:
         width: int = int(dict_config["WIDTH"])
+        dict_config.update({"WIDTH": width})
         height: int = int(dict_config["HEIGHT"])
+        dict_config.update({"HEIGHT": height})
     except (TypeError, ValueError):
         raise ValueError("Error: WIDTH and HEIGHT must"
                          " be valid integers in <config_file>.")
@@ -79,6 +84,7 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
     output: str = dict_config["OUTPUT_FILE"]
     if not output.endswith(".txt"):
         raise ValueError("Error: <OUTPUT_FILE> should be a .txt")
+    dict_config.update({"OUTPUT_FILE": output})
 
     # checking that ENTRY has 2 valid integers
     # and making them a tuple[int, int]
@@ -127,7 +133,14 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
                          f" and ({coords['end_x']}, {coords['end_y']})")
 
 
-
+def get_parsed_values(dict_config: dict[str, typing.Any]) -> Data:
+    parsed_values = Data(dict_config["WIDTH"],
+                         dict_config["HEIGHT"],
+                         dict_config["ENTRY"],
+                         dict_config["EXIT"],
+                         dict_config["OUTPUT_FILE"],
+                         dict_config["PERFECT"])
+    return parsed_values
 
 
 
