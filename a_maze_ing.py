@@ -3,7 +3,7 @@
 import sys
 import typing
 from errors import exit_program
-from wilson_maze_gen import wilson_main
+from algorithms.wilson_maze_gen import wilson_main
 from parsing import (
     check_raw_data,
     check_args,
@@ -14,11 +14,14 @@ from utils_files.data import Data
 
 
 def main() -> None:
+    # MATT PART :
     check_args()
     retrieved_data: dict[str, typing.Any] = retrieve_raw_data(sys.argv[1])
     check_raw_data(retrieved_data)
     check_values(retrieved_data)
     parsed: Data = get_parsed_values(retrieved_data)
+
+    # CEL PART :
     wilson_main(parsed)
 
 
