@@ -10,7 +10,7 @@ from parsing import (
     retrieve_raw_data,
     check_values,
     get_parsed_values)
-from utils_files import Data
+from utils_files.data import Data
 
 
 def main() -> None:
@@ -18,10 +18,8 @@ def main() -> None:
     retrieved_data: dict[str, typing.Any] = retrieve_raw_data(sys.argv[1])
     check_raw_data(retrieved_data)
     check_values(retrieved_data)
-    wilson_main(20, 20)
-    
-
     parsed: Data = get_parsed_values(retrieved_data)
+    wilson_main(parsed)
 
 
 if __name__ == "__main__":
