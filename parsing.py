@@ -1,13 +1,15 @@
 import sys
-import os.path
+import os
 import typing
-from utils_files.utils import nonblank_lines
+from utils import nonblank_lines, get_coords_pattern
+from typing import NamedTuple
+
 
 def check_args() -> None:
     if len(sys.argv) != 2:
         raise ValueError("Error: there must be only one argument!\n"
                          "Usage: python3 a_maze_ing.py <config_file>.")
-    if not os.path.exists(sys.argv[1]): 
+    if not os.path.exists(sys.argv[1]):
         raise FileNotFoundError(f"Error: file '{sys.argv[1]}' does not exist.")
     if not os.path.isfile(sys.argv[1]):
         raise IsADirectoryError(f"Error: '{sys.argv[1]}' is a directory.")
@@ -17,10 +19,13 @@ def retrieve_raw_data(config_file: str) -> dict[str, typing.Any]:
     raw_config: dict[str, typing.Any] = {}
     with open(config_file) as f:
         for line in nonblank_lines(f):
-            if line.startswith(' '):
+            if line.startswith('#'):
+                continue
+            elif line.startswith(' '):
                 raise KeyError("Error: keys cannot start with a space.")
             elif line.count('=') > 1:
-                raise ValueError("Error: there can only be one key/value pair per line.")
+                raise ValueError("Error: there can only be one"
+                                 " key/value pair per line.")
             else:
                 key, value = line.split('=', 1)
                 if key.upper().strip() in raw_config:
@@ -31,6 +36,7 @@ def retrieve_raw_data(config_file: str) -> dict[str, typing.Any]:
 
 
 def check_raw_data(raw_config: dict[str, typing.Any]) -> None:
+    print("Raw config is", raw_config)
     if len(raw_config) < 6:
         raise ValueError("Error: there must be at least 6 keys"
                          " in the <config_file>.")
@@ -50,7 +56,7 @@ def check_raw_data(raw_config: dict[str, typing.Any]) -> None:
             raise KeyError("Error: one or more mandatory key(s) missing.")
 
 
-def check_values(dict_config: dict[str, typing.Any]) -> None:
+def check_values(dict_config: dict[str, typing.Any]) -> NamedTuple:
     try:
         width: int = int(dict_config["WIDTH"])
         height: int = int(dict_config["HEIGHT"])
@@ -61,48 +67,93 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
         raise ValueError("Error: WIDTH and HEIGHT must be"
                          " >= 3 and <= 50 in <config_file>.")
 
+    # checking that PERFECT only accepts "true" or
+    # "false" and make it a boolean
     perfect: str = dict_config.get("PERFECT", "").lower()
     if perfect not in ("true", "false"):
         raise ValueError("Error: PERFECT must be 'True' or"
                          " 'False' in <config_file>.")
     dict_config["PERFECT"] = perfect == "true"
 
+    # checking that the output file is a .txt
     output: str = dict_config["OUTPUT_FILE"]
     if not output.endswith(".txt"):
         raise ValueError("Error: <OUTPUT_FILE> should be a .txt")
 
-
+    # checking that ENTRY has 2 valid integers
+    # and making them a tuple[int, int]
     values = dict_config["ENTRY"].split(',', 1)
+    if len(values) != 2:
+        raise ValueError("Error: format for ENTRY must be <entry=x, y>.")
     try:
-        entry = (int(values[0]), int(values[1]))
-    except ValueError as e:
-        raise ValueError("Error: Values for ENTRY must be valid integers (x, y)")
-    print(entry)
-#        try:
-#            x, y = dict_config["ENTRY"].split(',', 1).strip()
-#            dict_config["ENTRY"] = tuple(x,y)
-#        except ValueError:
-#            raise ValueError("Error: ENTRY and EXIT must be tuple(int, int)")
-#    try:
-#        entry_tup: tuple[int, int] = tuple(dict_config["ENTRY"])
-#        exit_tup: tuple[int, int] = tuple(dict_config["EXIT"])
-#    except ValueError:
-#        raise ValueError("Error: ENTRY and EXIT must be tuple[int, int]")
-    
+        entry_coords: tuple[int, int] = (int(values[0]), int(values[1]))
+        dict_config.update({"ENTRY": entry_coords})
+    except ValueError:
+        raise ValueError("Error: Values for ENTRY must be valid integers.")
+
+    # checking that EXIT has 2 valid integers and making them a tuple[int, int]
+    values = dict_config["EXIT"].split(',', 1)
+    if len(values) != 2:
+        raise ValueError("Error: format for EXIT must be <exit=x, y>.")
+    try:
+        exit_coords: tuple[int, int] = (int(values[0]), int(values[1]))
+        dict_config.update({"EXIT": exit_coords})
+    except ValueError:
+        raise ValueError("Error: Values for EXIT must be valid integers.")
+
+    # checking ENTRY and EXIT are within the grid
+    if not (0 <= entry_coords[0] < width) \
+        or not (0 <= entry_coords[1] < height) \
+            or not (0 <= exit_coords[0] < width) \
+            or not (0 <= exit_coords[1] < height):
+        raise ValueError("Error: ENTRY and EXIT must be within the grid.")
+
+    # checking ENTRY and EXIT are not at the same position
+    if entry_coords == exit_coords:
+        raise ValueError("Error: ENTRY and EXIT cannot be the same.")
+
+    # making sure that ENTRY and EXIT are not
+    # where the 42 pattern is going to be
+    pattern_h: int = 7
+    pattern_w: int = 6
+    coords: dict[str, int] = \
+        get_coords_pattern(height, width, pattern_h, pattern_w)
+    if (coords["start_x"] <= entry_coords[0] < coords["end_x"]
+       and coords["start_y"] <= entry_coords[1] < coords["end_y"]) \
+       or (coords["start_x"] <= exit_coords[0] < coords["end_x"]
+       and coords["start_y"] <= exit_coords[1] < coords["end_y"]):
+        raise ValueError(f"Error: values for ENTRY and EXIT must be outside"
+                         f" ({coords['start_x']}, {coords['start_y']})"
+                         f" and ({coords['end_x']}, {coords['end_y']})")
+
+    parsed_values = namedtuple("WIDTH", [width], "HEIGHT", [height])
+    return parsed_values
+
+
 
 
 
 '''
 need to add exclusion of a parameter if the first character of the line in config.txt is # - WIP
 blank return lines to be ignored  - OK
-key should always start first char on the line  string.startswith('') - OK
+key should always start first char on the line  string.startswith('') + put in README that it is deliberate for lines starting with spaces to raise an error - OK missing README
 PERFECT should be boolean, not str - OK?
 don't allow spaces before and after = and enforce .txt for OUTPUT_FILE and justify in readme.md
 if grid is too small, 42 is omitted and an error message (to stderr) is printed stating that 42 could not be printed
 add an upper limit to X (50)
 in readme: state that < 3 creates a map that cannot be non-perfect
-make sure format for ENTRY and EXIT is tuple -> X,Y
-ENTRY and EXIT must be inside the maze and must not be the same and must not be inside 42
+make sure format for ENTRY and EXIT is tuple -> X,Y - OK
+ENTRY and EXIT must be inside the maze and must not be the same and must not be inside 42 - OK
 the user cannot add or edit any parameter to config.txt
 import signal to catch ctrl + c
+
+// Pour la selection de theme :
+// Avoir une key "THEME" allant de 0 a nb_theme-1 (surement 5)
+// 42 / Coeur / Pingouin / C / M / Sans
+// Avec 0 == PATTERN_42
+// Pour pouvoir naviguer plus tard entre les thèmes (?)
+// Sauf si j'ai mal compris le fonctionnement du switch
+
+
+pour le 42: WIDHT x HEIGHT
 '''
