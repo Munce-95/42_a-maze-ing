@@ -159,7 +159,6 @@ make sure format for ENTRY and EXIT is tuple -> X,Y - OK
 ENTRY and EXIT must be inside the maze and must not be the same and must not be inside 42 - OK
 the user cannot add or edit any parameter to config.txt
 import signal to catch ctrl + c
-if grid is < 8,6 -> error message to not display pattern
 
 // Pour la selection de theme :
 // Avoir une key "THEME" allant de 0 a nb_theme-1 (surement 5)

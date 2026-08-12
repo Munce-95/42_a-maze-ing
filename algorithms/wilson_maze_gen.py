@@ -208,8 +208,9 @@ def wilson_main(parsed: NamedTuple) -> None:
     matrix, r_w, r_h = build_matrix_1x1(maze, WIDTH, HEIGHT, is_sans=is_sans)
     render_terminal_blocks(matrix, r_w, r_h)
 
-if __name__ == "__main__":
+'''if __name__ == "__main__":
     WIDTH, HEIGHT = 50, 50
     maze, is_sans = generate_wilson(WIDTH, HEIGHT)
     matrix, r_w, r_h = build_matrix_1x1(maze, WIDTH, HEIGHT, is_sans=is_sans)
     render_terminal_blocks(matrix, r_w, r_h)
+'''
