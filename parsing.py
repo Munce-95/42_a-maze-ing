@@ -139,7 +139,6 @@ def get_parsed_values(dict_config: dict[str, typing.Any]) -> Data:
     return parsed_values
 
 
-
 '''
 need to add exclusion of a parameter if the first character of the line in config.txt is # - WIP
 blank return lines to be ignored  - OK

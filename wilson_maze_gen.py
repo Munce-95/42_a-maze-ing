@@ -1,6 +1,6 @@
 import random
-from typing import List, Tuple
-from utils_files.pattern import pattern_list, PATTERN_SANS
+from typing import List, Tuple, NamedTuple
+from utils_files.pattern import pattern_list, PATTERN_SANS, PATTERN_PENGUIN
 from utils_files.themes import get_bg_list_for_pattern
 
 
@@ -40,14 +40,17 @@ def remove_wall(
 
 def apply_42_pattern(
         grid: List[List[Cell]],
-        width: int, height: int) -> bool:
+        width: int,
+        height: int) -> bool:
     global current_bg_list
     pattern = random.choice(pattern_list)
-    if pattern == PATTERN_SANS and (WIDTH < 20 or HEIGHT < 20):
-        if len(pattern_list) < 2:
+    while (
+            pattern == PATTERN_SANS and (width < 20 or height < 20)
+            or (pattern == PATTERN_PENGUIN) and (width < 12 or height < 12)):
+        if len(pattern_list) < 3:
             return f"Can't generate pattern"
-        while (pattern == PATTERN_SANS) == True:
-            pattern = random.choice(pattern_list)
+        pattern = random.choice(pattern_list)
+            
     is_sans = (pattern == PATTERN_SANS)
     current_bg_list = get_bg_list_for_pattern(pattern, is_sans)
     pat_h = len(pattern)
@@ -88,7 +91,8 @@ def generate_wilson(
         width: int,
         height: int) -> List[List[Cell]]:
     grid = [[Cell(x, y) for y in range(height)] for x in range(width)]
-    is_sans = apply_42_pattern(grid, width, height)
+    if (width >= 8 and height >= 7):
+        is_sans = apply_42_pattern(grid, width, height)
     unvisited = [
         grid[x][y] for x in range(width)
         for y in range(height)
@@ -196,7 +200,7 @@ def render_terminal_blocks(
                 line += current_bg_list[3] + "  " + "\033[0m"
         print(line)
     
-def wilson_main(parsed) -> None:
+def wilson_main(parsed: NamedTuple) -> None:
     WIDTH, HEIGHT = parsed.width, parsed.height
     maze, is_sans = generate_wilson(WIDTH, HEIGHT)
     matrix, r_w, r_h = build_matrix_1x1(maze, WIDTH, HEIGHT, is_sans=is_sans)
