@@ -79,6 +79,10 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
                          " 'False' in <config_file>.")
     dict_config["PERFECT"] = perfect == "true"
 
+    # checking that options only accepts "true" or
+    # "false", make them booleans
+    # and ensure that there can't be more than one "true"
+
     # checking that the output file is a .txt
     output: str = dict_config["OUTPUT_FILE"]
     if not output.endswith(".txt"):
