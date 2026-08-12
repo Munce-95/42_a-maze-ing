@@ -1,9 +1,7 @@
 WIDTH = 10
 HEIGHT=20
-entry=3,6
-width   =18
-EXIT=4,5
+entry=1,6
+EXIT=1,6
 OUTPUT_FILE=test.txt 
 PERFECT=True
 PENGUIN = 12
-hugs=56098

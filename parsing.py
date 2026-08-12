@@ -1,5 +1,5 @@
 import sys
-import os.path
+import os
 import typing
 from utils import nonblank_lines, get_coords_pattern
 
@@ -66,7 +66,8 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
         raise ValueError("Error: WIDTH and HEIGHT must be"
                          " >= 3 and <= 50 in <config_file>.")
 
-    # checking that PERFECT only accepts "true" or "false" and make it a boolean
+    # checking that PERFECT only accepts "true" or
+    # "false" and make it a boolean
     perfect: str = dict_config.get("PERFECT", "").lower()
     if perfect not in ("true", "false"):
         raise ValueError("Error: PERFECT must be 'True' or"
@@ -78,7 +79,8 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
     if not output.endswith(".txt"):
         raise ValueError("Error: <OUTPUT_FILE> should be a .txt")
 
-    # checking that ENTRY has 2 valid integers and making them a tuple[int, int]
+    # checking that ENTRY has 2 valid integers
+    # and making them a tuple[int, int]
     values = dict_config["ENTRY"].split(',', 1)
     if len(values) != 2:
         raise ValueError("Error: format for ENTRY must be <entry=x, y>.")
@@ -98,13 +100,26 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
     except ValueError:
         raise ValueError("Error: Values for EXIT must be valid integers.")
 
-    # making sure that ENTRY and EXIT are not where the 42 pattern is going to be
+    # checking ENTRY and EXIT are within the grid
+    if not (0 <= entry_coords[0] < width) \
+        or not (0 <= entry_coords[1] < height) \
+            or not (0 <= exit_coords[0] < width) \
+            or not (0 <= exit_coords[1] < height):
+        raise ValueError("Error: ENTRY and EXIT must be within the grid.")
+
+    # checking ENTRY and EXIT are not at the same position
+    if entry_coords == exit_coords:
+        raise ValueError("Error: ENTRY and EXIT cannot be the same.")
+
+    # making sure that ENTRY and EXIT are not
+    # where the 42 pattern is going to be
     pattern_h: int = 7
     pattern_w: int = 6
-    coords: dict[str, int] = get_coords_pattern(height, width, pattern_h, pattern_w)
-    if (coords["start_x"] <= entry_coords[0] < coords["end_x"] \
+    coords: dict[str, int] = \
+        get_coords_pattern(height, width, pattern_h, pattern_w)
+    if (coords["start_x"] <= entry_coords[0] < coords["end_x"]
        and coords["start_y"] <= entry_coords[1] < coords["end_y"]) \
-       or (coords["start_x"] <= exit_coords[0] < coords["end_x"] \
+       or (coords["start_x"] <= exit_coords[0] < coords["end_x"]
        and coords["start_y"] <= exit_coords[1] < coords["end_y"]):
         raise ValueError(f"Error: values for ENTRY and EXIT must be outside"
                          f" ({coords['start_x']}, {coords['start_y']})"
@@ -112,7 +127,7 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
 
     print(dict_config)
 
- 
+
 
 
 
@@ -125,8 +140,8 @@ don't allow spaces before and after = and enforce .txt for OUTPUT_FILE and justi
 if grid is too small, 42 is omitted and an error message (to stderr) is printed stating that 42 could not be printed
 add an upper limit to X (50)
 in readme: state that < 3 creates a map that cannot be non-perfect
-make sure format for ENTRY and EXIT is tuple -> X,Y
-ENTRY and EXIT must be inside the maze and must not be the same and must not be inside 42
+make sure format for ENTRY and EXIT is tuple -> X,Y - OK
+ENTRY and EXIT must be inside the maze and must not be the same and must not be inside 42 - OK
 the user cannot add or edit any parameter to config.txt
 import signal to catch ctrl + c
 
