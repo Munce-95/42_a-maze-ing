@@ -198,7 +198,7 @@ def render_terminal_blocks(
             elif char == "Y":
                 line += "\033[48;2;71;130;201m" + "  " + "\033[0m"
             elif char == ".":
-                line += "\033[48;2;230;50;50m" + "  " + "\033[0m"
+                line += current_bg_list[4] + "  " + "\033[0m"
             else:
                 line += current_bg_list[3] + "  " + "\033[0m"
         print(line)
