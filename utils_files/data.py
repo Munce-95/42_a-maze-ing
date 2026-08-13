@@ -8,3 +8,4 @@ class Data(NamedTuple):
     exit_: tuple[int, int]
     output_file: str
     perfect: bool
+    pattern: str

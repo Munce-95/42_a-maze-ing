@@ -79,10 +79,6 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
                          " 'False' in <config_file>.")
     dict_config["PERFECT"] = perfect == "true"
 
-    # checking that options only accepts "true" or
-    # "false", make them booleans
-    # and ensure that there can't be more than one "true"
-    patterns: list[str] = 
     # checking that the output file is a .txt
     output: str = dict_config["OUTPUT_FILE"]
     if not output.endswith(".txt"):
@@ -121,6 +117,18 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
     if entry_coords == exit_coords:
         raise ValueError("Error: ENTRY and EXIT cannot be the same.")
 
+    # checking that options only accepts "true" or
+    # "false", make them booleans
+    # and ensure that there can't be more than one "true"
+    patterns: list[str] = ["PENGUIN", "HEART", "CEL", "MATT", "SANS"]
+    true_keys = [k for k in patterns if dict_config.get(k, "false").lower() == "true"]
+    if len(true_keys) == 0 or len(true_keys) > 1:
+        pattern: str = "PATTERN_42"
+        dict_config.update({"PATTERN": pattern})
+    elif len(true_keys) == 1:
+        pattern: str = true_keys[0]
+        dict_config.update({"PATTERN": pattern})
+
     # checking if pattern is displayable
     if height < MIN_DISPLAY_SIZE or width < MIN_DISPLAY_SIZE:
         print("Warning: the grid is too small to display the pattern", file=sys.stderr)
@@ -146,7 +154,8 @@ def get_parsed_values(dict_config: dict[str, typing.Any]) -> Data:
                          dict_config["ENTRY"],
                          dict_config["EXIT"],
                          dict_config["OUTPUT_FILE"],
-                         dict_config["PERFECT"])
+                         dict_config["PERFECT"],
+                         dict_config["PATTERN"])
     return parsed_values
 
 
