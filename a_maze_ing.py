@@ -20,6 +20,7 @@ def main() -> None:
     check_raw_data(retrieved_data)
     check_values(retrieved_data)
     parsed: Data = get_parsed_values(retrieved_data)
+    print(parsed.pattern)
 
     # CEL PART :
     wilson_main(parsed)

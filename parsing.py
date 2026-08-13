@@ -120,13 +120,14 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
     # checking that options only accepts "true" or
     # "false", make them booleans
     # and ensure that there can't be more than one "true"
-    patterns: list[str] = ["PENGUIN", "HEART", "CEL", "MATT", "SANS"]
+    patterns: list[str] = ["PATTERN_PENGUIN", "PATTERN_HEART", "PATTERN_CEL", "PATTERN_MATT", "PATTERN_SANS"]
     true_keys = [k for k in patterns if dict_config.get(k, "false").lower() == "true"]
+    pattern: str = ""
     if len(true_keys) == 0 or len(true_keys) > 1:
-        pattern: str = "PATTERN_42"
+        pattern = "PATTERN_42"
         dict_config.update({"PATTERN": pattern})
     elif len(true_keys) == 1:
-        pattern: str = true_keys[0]
+        pattern = true_keys[0]
         dict_config.update({"PATTERN": pattern})
 
     # checking if pattern is displayable
