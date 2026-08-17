@@ -89,7 +89,7 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
     # and making them a tuple[int, int]
     values = dict_config["ENTRY"].split(',', 1)
     if len(values) != 2:
-        raise ValueError("Error: format for ENTRY must be <entry=x, y>.")
+        raise ValueError("Error: format for ENTRY must be <ENTRY=x, y>.")
     try:
         entry_coords: tuple[int, int] = (int(values[0]), int(values[1]))
         dict_config.update({"ENTRY": entry_coords})
@@ -99,7 +99,7 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
     # checking that EXIT has 2 valid integers and making them a tuple[int, int]
     values = dict_config["EXIT"].split(',', 1)
     if len(values) != 2:
-        raise ValueError("Error: format for EXIT must be <exit=x, y>.")
+        raise ValueError("Error: format for EXIT must be <EXIT=x, y>.")
     try:
         exit_coords: tuple[int, int] = (int(values[0]), int(values[1]))
         dict_config.update({"EXIT": exit_coords})
