@@ -24,7 +24,7 @@ def main() -> None:
 
     # CEL PART :
     wilson_main(parsed)
-    
+
 
 
 if __name__ == "__main__":

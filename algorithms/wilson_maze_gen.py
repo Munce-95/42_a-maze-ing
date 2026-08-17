@@ -204,7 +204,8 @@ def render_terminal_blocks(
             else:
                 line += current_bg_list[3] + "  " + "\033[0m"
         print(line)
-    
+
+
 def wilson_main(parsed: NamedTuple) -> None:
     WIDTH, HEIGHT, PATTERN = parsed.width, parsed.height, parsed.pattern
     maze, is_sans = generate_wilson(WIDTH, HEIGHT, PATTERN)
