@@ -70,3 +70,19 @@ pattern_list = [
     PATTERN_CEL,
     PATTERN_MATT,
     PATTERN_SANS]
+
+pattern_name: list[str] = [
+    "PATTERN_42",
+    "PATTERN_HEART",
+    "PATTERN_PENGUIN",
+    "PATTERN_CEL",
+    "PATTERN_MATT",
+    "PATTERN_SANS"]
+
+pattern_dict: dict[str, list[list[int]]] = {}
+for i, pattern in enumerate(pattern_list):
+    pattern_dict.update({pattern_name[i]: pattern})
+
+
+def get_pattern_by_name(parsed_pattern: str) -> list[list[int]]:
+    return pattern_dict[parsed_pattern]

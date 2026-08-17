@@ -1,6 +1,6 @@
 import random
 from typing import List, Tuple, NamedTuple
-from utils_files.pattern import pattern_list, PATTERN_SANS, PATTERN_PENGUIN
+from utils_files.pattern import pattern_list, PATTERN_SANS, PATTERN_PENGUIN, get_pattern_by_name
 from utils_files.themes import get_bg_list_for_pattern
 from algorithms.dijkstra import solve_dijkstra, mark_path_in_matrix
 
@@ -42,30 +42,31 @@ def remove_wall(
 def apply_42_pattern(
         grid: List[List[Cell]],
         width: int,
-        height: int) -> bool:
+        height: int,
+        pattern: str) -> bool:
     global current_bg_list
-    pattern = random.choice(pattern_list)
-    while (
-            pattern == PATTERN_SANS and (width < 20 or height < 20)
-            or (pattern == PATTERN_PENGUIN) and (width < 12 or height < 12)):
-        if len(pattern_list) < 3:
-            return f"Can't generate pattern"
-        pattern = random.choice(pattern_list)
-    is_sans = (pattern == PATTERN_SANS)
-    current_bg_list = get_bg_list_for_pattern(pattern, is_sans)
-    pat_h = len(pattern)
-    pat_w = len(pattern[0])
+    pattern_matrix = get_pattern_by_name(pattern)
+    # while (
+    #         pattern == PATTERN_SANS and (width < 20 or height < 20)
+    #         or (pattern == PATTERN_PENGUIN) and (width < 12 or height < 12)):
+    #     if len(pattern_list) < 3:
+    #         return f"Can't generate pattern"
+    #     pattern = random.choice(pattern_list)
+    is_sans = (pattern_matrix == PATTERN_SANS)
+    current_bg_list = get_bg_list_for_pattern(is_sans)
+    pat_h = len(pattern_matrix)
+    pat_w = len(pattern_matrix[0])
     start_x = (width - pat_w) // 2
     start_y = (height - pat_h) // 2
     for py in range(pat_h):
         if (width < 10 or height < 10):
             break
         for px in range(pat_w):
-            if pattern[py][px] == 1:
+            if pattern_matrix[py][px] == 1:
                 grid[start_x + px][start_y + py].is_blocked = True
-            elif pattern[py][px] == 2:
+            elif pattern_matrix[py][px] == 2:
                 grid[start_x + px][start_y + py].in_symbol = True
-            elif pattern[py][px] == 3:
+            elif pattern_matrix[py][px] == 3:
                 grid[start_x + px][start_y + py].sans_eye = True
     return is_sans
 
@@ -91,9 +92,10 @@ def get_unblocked_neighbors(
 
 def generate_wilson(
         width: int,
-        height: int) -> List[List[Cell]]:
+        height: int,
+        pattern: str) -> List[List[Cell]]:
     grid = [[Cell(x, y) for y in range(height)] for x in range(width)]
-    is_sans = apply_42_pattern(grid, width, height)
+    is_sans = apply_42_pattern(grid, width, height, pattern)
     unvisited = [
         grid[x][y] for x in range(width)
         for y in range(height)
@@ -204,8 +206,8 @@ def render_terminal_blocks(
         print(line)
     
 def wilson_main(parsed: NamedTuple) -> None:
-    WIDTH, HEIGHT = parsed.width, parsed.height
-    maze, is_sans = generate_wilson(WIDTH, HEIGHT)
+    WIDTH, HEIGHT, PATTERN = parsed.width, parsed.height, parsed.pattern
+    maze, is_sans = generate_wilson(WIDTH, HEIGHT, PATTERN)
     matrix, r_w, r_h = build_matrix_1x1(maze, WIDTH, HEIGHT, is_sans=is_sans)
     path = solve_dijkstra(maze, parsed)
     mark_path_in_matrix(matrix, path)
