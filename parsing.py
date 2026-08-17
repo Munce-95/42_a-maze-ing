@@ -1,9 +1,9 @@
-import sys
-import os
-import typing
-from utils_files.utils import nonblank_lines, get_coords_pattern
-from utils_files.data import Data
-from utils_files.pattern import pattern_list
+import sys, os, typing
+from utils_files import (nonblank_lines,
+                         get_coords_pattern,
+                         Data,
+                         pattern_list)
+
 
 MIN_DISPLAY_SIZE = 10
 
