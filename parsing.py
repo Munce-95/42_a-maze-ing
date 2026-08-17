@@ -2,7 +2,7 @@ import sys, os, typing
 from utils_files import (nonblank_lines,
                          get_coords_pattern,
                          Data,
-                         pattern_list)
+                         get_pattern_by_name)
 
 
 MIN_DISPLAY_SIZE = 10
@@ -58,7 +58,7 @@ def check_raw_data(raw_config: dict[str, typing.Any]) -> None:
             raise KeyError("Error: one or more mandatory key(s) missing.")
 
 
-def check_values(dict_config: dict[str, typing.Any]) -> None:
+def _check_dimensions(dict_config: dict[str, typing.Any]) -> tuple[int, int]:
     try:
         width: int = int(dict_config["WIDTH"])
         dict_config.update({"WIDTH": width})
@@ -69,8 +69,11 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
                          " be valid integers in <config_file>.")
     if not 3 <= width <= 50 or not 3 <= height <= 50:
         raise ValueError("Error: WIDTH and HEIGHT must be"
-                         " >= 3 and <= 50 in <config_file>.")
+                            " >= 3 and <= 50 in <config_file>.")
+    return (dict_config["WIDTH"], dict_config["HEIGHT"])
 
+
+def _check_perfect(dict_config: dict[str, typing.Any]) -> None:
     # checking that PERFECT only accepts "true" or
     # "false" and make it a boolean
     perfect: str = dict_config.get("PERFECT", "").lower()
@@ -79,12 +82,16 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
                          " 'False' in <config_file>.")
     dict_config["PERFECT"] = perfect == "true"
 
+
+def _check_output_file(dict_config: dict[str, typing.Any]) -> None:
     # checking that the output file is a .txt
     output: str = dict_config["OUTPUT_FILE"]
     if not output.endswith(".txt"):
         raise ValueError("Error: <OUTPUT_FILE> should be a .txt")
     dict_config.update({"OUTPUT_FILE": output})
 
+
+def _check_entry_format(dict_config: dict[str, typing.Any]) -> tuple[int, int]:
     # checking that ENTRY has 2 valid integers
     # and making them a tuple[int, int]
     values = dict_config["ENTRY"].split(',', 1)
@@ -95,7 +102,10 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
         dict_config.update({"ENTRY": entry_coords})
     except ValueError:
         raise ValueError("Error: Values for ENTRY must be valid integers.")
+    return entry_coords
 
+
+def _check_exit_format(dict_config: dict[str, typing.Any]) -> tuple[int, int]:
     # checking that EXIT has 2 valid integers and making them a tuple[int, int]
     values = dict_config["EXIT"].split(',', 1)
     if len(values) != 2:
@@ -105,23 +115,29 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
         dict_config.update({"EXIT": exit_coords})
     except ValueError:
         raise ValueError("Error: Values for EXIT must be valid integers.")
+    return exit_coords
 
+
+def _check_entry_exit_bound(width_height: tuple[int, int],
+                             entry_coords: tuple[int, int],
+                             exit_coords: tuple[int, int]) -> None:
     # checking ENTRY and EXIT are within the grid
-    if not (0 <= entry_coords[0] < width) \
-        or not (0 <= entry_coords[1] < height) \
-            or not (0 <= exit_coords[0] < width) \
-            or not (0 <= exit_coords[1] < height):
+    if not (0 <= entry_coords[0] < width_height[0]) \
+        or not (0 <= entry_coords[1] < width_height[1]) \
+            or not (0 <= exit_coords[0] < width_height[0]) \
+            or not (0 <= exit_coords[1] < width_height[1]):
         raise ValueError("Error: ENTRY and EXIT must be within the grid.")
 
-    # checking ENTRY and EXIT are not at the same position
+
+def _check_entry_exit_equality(entry_coords: tuple[int, int],
+                               exit_coords: tuple[int, int]) -> None:
     if entry_coords == exit_coords:
         raise ValueError("Error: ENTRY and EXIT cannot be the same.")
 
-    # checking that options only accepts "true" or
-    # "false", make them booleans
-    # and ensure that there can't be more than one "true"
+
+def _check_pattern_inclusion(dict_config: dict[str, typing.Any]) -> str:
     patterns: list[str] = ["PATTERN_PENGUIN", "PATTERN_HEART", "PATTERN_CEL", "PATTERN_MATT", "PATTERN_SANS"]
-    true_keys = [k for k in patterns if dict_config.get(k, "false").lower() == "true"]
+    true_keys: list[str] = [k for k in patterns if dict_config.get(k, "false").lower() == "true"]
     pattern: str = ""
     if len(true_keys) == 0 or len(true_keys) > 1:
         pattern = "PATTERN_42"
@@ -129,17 +145,23 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
     elif len(true_keys) == 1:
         pattern = true_keys[0]
         dict_config.update({"PATTERN": pattern})
+    return pattern
 
-    # checking if pattern is displayable
-    if height < MIN_DISPLAY_SIZE or width < MIN_DISPLAY_SIZE:
+
+def _check_pattern_displayable(width_height: tuple[int, int],
+                               entry_coords: tuple[int, int],
+                               exit_coords: tuple[int, int],
+                               pattern: str) -> None:
+    if width_height[1] < MIN_DISPLAY_SIZE or width_height[0] < MIN_DISPLAY_SIZE:
         print("Warning: the grid is too small to display the pattern", file=sys.stderr)
     else:
         # making sure that ENTRY and EXIT are not
         # where the 42 pattern is going to be
-        pattern_h: int = 7 # take from patterns
-        pattern_w: int = 6
+        pattern_matrix: list[list[int]] = get_pattern_by_name(pattern)
+        pattern_h: int = len(pattern_matrix)
+        pattern_w: int = len(pattern_matrix[0])
         coords: dict[str, int] = \
-            get_coords_pattern(height, width, pattern_h, pattern_w)
+            get_coords_pattern(width_height[1], width_height[0], pattern_h, pattern_w)
         if (coords["start_x"] <= entry_coords[0] < coords["end_x"]
         and coords["start_y"] <= entry_coords[1] < coords["end_y"]) \
         or (coords["start_x"] <= exit_coords[0] < coords["end_x"]
@@ -147,6 +169,18 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
             raise ValueError(f"Error: values for ENTRY and EXIT must be outside"
                             f" ({coords['start_x']}, {coords['start_y']})"
                             f" and ({coords['end_x']}, {coords['end_y']})")
+
+
+def check_values(dict_config: dict[str, typing.Any]) -> None:
+    width_height: tuple[int, int] = _check_dimensions(dict_config)
+    _check_perfect(dict_config)
+    _check_output_file(dict_config)
+    entry_coords: tuple[int, int] = _check_entry_format(dict_config)
+    exit_coords: tuple[int, int] = _check_exit_format(dict_config)
+    _check_entry_exit_bound(width_height, entry_coords, exit_coords)
+    _check_entry_exit_equality(entry_coords, exit_coords)
+    pattern: str = _check_pattern_inclusion(dict_config)
+    _check_pattern_displayable(width_height, entry_coords, exit_coords, pattern)
 
 
 def get_parsed_values(dict_config: dict[str, typing.Any]) -> Data:
