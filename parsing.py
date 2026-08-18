@@ -1,4 +1,6 @@
-import sys, os, typing
+import sys
+import os
+import typing
 from utils_files import (nonblank_lines,
                          get_coords_pattern,
                          Data,
@@ -9,6 +11,7 @@ MIN_DISPLAY_SIZE = 10
 
 
 def check_args() -> None:
+
     if len(sys.argv) != 2:
         raise ValueError("Error: there must be only one argument!\n"
                          "Usage: python3 a_maze_ing.py <config_file>.")
@@ -69,7 +72,7 @@ def _check_dimensions(dict_config: dict[str, typing.Any]) -> tuple[int, int]:
                          " be valid integers in <config_file>.")
     if not 3 <= width <= 50 or not 3 <= height <= 50:
         raise ValueError("Error: WIDTH and HEIGHT must be"
-                            " >= 3 and <= 50 in <config_file>.")
+                         " >= 3 and <= 50 in <config_file>.")
     return (dict_config["WIDTH"], dict_config["HEIGHT"])
 
 
@@ -119,8 +122,8 @@ def _check_exit_format(dict_config: dict[str, typing.Any]) -> tuple[int, int]:
 
 
 def _check_entry_exit_bound(width_height: tuple[int, int],
-                             entry_coords: tuple[int, int],
-                             exit_coords: tuple[int, int]) -> None:
+                            entry_coords: tuple[int, int],
+                            exit_coords: tuple[int, int]) -> None:
     # checking ENTRY and EXIT are within the grid
     if not (0 <= entry_coords[0] < width_height[0]) \
         or not (0 <= entry_coords[1] < width_height[1]) \
@@ -136,8 +139,13 @@ def _check_entry_exit_equality(entry_coords: tuple[int, int],
 
 
 def _check_pattern_inclusion(dict_config: dict[str, typing.Any]) -> str:
-    patterns: list[str] = ["PATTERN_PENGUIN", "PATTERN_HEART", "PATTERN_CEL", "PATTERN_MATT", "PATTERN_SANS"]
-    true_keys: list[str] = [k for k in patterns if dict_config.get(k, "false").lower() == "true"]
+    patterns: list[str] = ["PATTERN_PENGUIN",
+                           "PATTERN_HEART",
+                           "PATTERN_CEL",
+                           "PATTERN_MATT",
+                           "PATTERN_SANS"]
+    true_keys: list[str] = [k for k in patterns
+                            if dict_config.get(k, "false").lower() == "true"]
     pattern: str = ""
     if len(true_keys) == 0 or len(true_keys) > 1:
         pattern = "PATTERN_42"
@@ -152,8 +160,10 @@ def _check_pattern_displayable(width_height: tuple[int, int],
                                entry_coords: tuple[int, int],
                                exit_coords: tuple[int, int],
                                pattern: str) -> None:
-    if width_height[1] < MIN_DISPLAY_SIZE or width_height[0] < MIN_DISPLAY_SIZE:
-        print("Warning: the grid is too small to display the pattern", file=sys.stderr)
+    if width_height[1] < MIN_DISPLAY_SIZE \
+       or width_height[0] < MIN_DISPLAY_SIZE:
+        print("Warning: the grid is too small to display the pattern",
+              file=sys.stderr)
     else:
         # making sure that ENTRY and EXIT are not
         # where the 42 pattern is going to be
@@ -161,14 +171,18 @@ def _check_pattern_displayable(width_height: tuple[int, int],
         pattern_h: int = len(pattern_matrix)
         pattern_w: int = len(pattern_matrix[0])
         coords: dict[str, int] = \
-            get_coords_pattern(width_height[1], width_height[0], pattern_h, pattern_w)
+            get_coords_pattern(width_height[1],
+                               width_height[0],
+                               pattern_h,
+                               pattern_w)
         if (coords["start_x"] <= entry_coords[0] < coords["end_x"]
-        and coords["start_y"] <= entry_coords[1] < coords["end_y"]) \
-        or (coords["start_x"] <= exit_coords[0] < coords["end_x"]
-        and coords["start_y"] <= exit_coords[1] < coords["end_y"]):
-            raise ValueError(f"Error: values for ENTRY and EXIT must be outside"
-                            f" ({coords['start_x']}, {coords['start_y']})"
-                            f" and ({coords['end_x']}, {coords['end_y']})")
+            and coords["start_y"] <= entry_coords[1] < coords["end_y"]) \
+                or (coords["start_x"] <= exit_coords[0] < coords["end_x"]
+                    and coords["start_y"] <= exit_coords[1] < coords["end_y"]):
+            raise ValueError(f"Error: values for ENTRY and"
+                             f"EXIT must be outside"
+                             f" ({coords['start_x']}, {coords['start_y']})"
+                             f" and ({coords['end_x']}, {coords['end_y']})")
 
 
 def check_values(dict_config: dict[str, typing.Any]) -> None:
@@ -180,7 +194,8 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
     _check_entry_exit_bound(width_height, entry_coords, exit_coords)
     _check_entry_exit_equality(entry_coords, exit_coords)
     pattern: str = _check_pattern_inclusion(dict_config)
-    _check_pattern_displayable(width_height, entry_coords, exit_coords, pattern)
+    _check_pattern_displayable(width_height,
+                               entry_coords, exit_coords, pattern)
 
 
 def get_parsed_values(dict_config: dict[str, typing.Any]) -> Data:
