@@ -11,7 +11,9 @@ MIN_DISPLAY_SIZE = 10
 
 
 def check_args() -> None:
-
+    """
+    Checking if one argument is present and if the file passed as arg exists.
+    """
     if len(sys.argv) != 2:
         raise ValueError("Error: there must be only one argument!\n"
                          "Usage: python3 a_maze_ing.py <config_file>.")
