@@ -46,12 +46,6 @@ def apply_42_pattern(
         pattern: str) -> bool:
     global current_bg_list
     pattern_matrix = get_pattern_by_name(pattern)
-    # while (
-    #         pattern == PATTERN_SANS and (width < 20 or height < 20)
-    #         or (pattern == PATTERN_PENGUIN) and (width < 12 or height < 12)):
-    #     if len(pattern_list) < 3:
-    #         return f"Can't generate pattern"
-    #     pattern = random.choice(pattern_list)
     is_sans = (pattern_matrix == PATTERN_SANS)
     current_bg_list = get_bg_list_for_pattern(is_sans)
     pat_h = len(pattern_matrix)
