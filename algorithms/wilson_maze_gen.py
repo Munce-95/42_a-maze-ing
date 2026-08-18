@@ -39,6 +39,31 @@ def remove_wall(
         cell2.walls['S'] = False
 
 
+def non_perfect(
+        grid: List[List[Cell]],
+        width: int,
+        height: int,
+        ratio: float = 0.3) -> None:
+    remove_walls = []
+    for x in range(width):
+        for y in range(height):
+            cell = grid[x][y]
+            if cell.is_blocked or cell.in_symbol or cell.sans_eye:
+                continue
+            if cell.walls['E'] and x + 1 < width:
+                neighbor = grid[x + 1][y]
+                if not (neighbor.is_blocked or neighbor.in_symbol or neighbor.sans_eye):
+                    remove_walls.append((cell, neighbor))
+            if cell.walls['S'] and y + 1 < height:
+                neighbor = grid[x][y + 1]
+                if not (neighbor.is_blocked or neighbor.in_symbol or neighbor.sans_eye):
+                    remove_walls.append((cell, neighbor))
+    num_to_remove = int(len(remove_walls) * ratio)
+    walls_to_remove = random.sample(remove_walls, min(num_to_remove, len(remove_walls)))
+    for cell1, cell2 in walls_to_remove:
+        remove_wall(cell1, cell2)
+
+
 def apply_42_pattern(
         grid: List[List[Cell]],
         width: int,
@@ -87,7 +112,8 @@ def get_unblocked_neighbors(
 def generate_wilson(
         width: int,
         height: int,
-        pattern: str) -> List[List[Cell]]:
+        pattern: str,
+        parsed: NamedTuple) -> List[List[Cell]]:
     grid = [[Cell(x, y) for y in range(height)] for x in range(width)]
     is_sans = apply_42_pattern(grid, width, height, pattern)
     unvisited = [
@@ -115,6 +141,8 @@ def generate_wilson(
             remove_wall(path[i], path[i + 1])
             if path[i] in unvisited:
                 unvisited.remove(path[i])
+    if not parsed.perfect:
+        non_perfect(grid, width, height)
     return grid, is_sans
 
 
@@ -202,15 +230,8 @@ def render_terminal_blocks(
 
 def wilson_main(parsed: NamedTuple) -> None:
     WIDTH, HEIGHT, PATTERN = parsed.width, parsed.height, parsed.pattern
-    maze, is_sans = generate_wilson(WIDTH, HEIGHT, PATTERN)
+    maze, is_sans = generate_wilson(WIDTH, HEIGHT, PATTERN, parsed)
     matrix, r_w, r_h = build_matrix_1x1(maze, WIDTH, HEIGHT, is_sans=is_sans)
     path = solve_dijkstra(maze, parsed)
     mark_path_in_matrix(matrix, path)
     render_terminal_blocks(matrix, r_w, r_h)
-
-'''if __name__ == "__main__":
-    WIDTH, HEIGHT = 50, 50
-    maze, is_sans = generate_wilson(WIDTH, HEIGHT)
-    matrix, r_w, r_h = build_matrix_1x1(maze, WIDTH, HEIGHT, is_sans=is_sans)
-    render_terminal_blocks(matrix, r_w, r_h)
-'''
