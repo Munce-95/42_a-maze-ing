@@ -3,7 +3,7 @@
 import sys
 import typing
 from errors import exit_program
-from algorithms.wilson_maze_gen import wilson_main
+from algorithms.wilson import wilson_main
 from parsing import (
     check_raw_data,
     check_args,
@@ -24,7 +24,6 @@ def main() -> None:
 
     # CEL PART :
     wilson_main(parsed)
-
 
 
 if __name__ == "__main__":
