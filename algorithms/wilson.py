@@ -180,7 +180,7 @@ def _merge_sans_blocks(
         output_grid: List[List[str]],
         width: int,
         height: int) -> None:
-    """Remplissage spécial pour fusionner les blocs du motif Sans."""
+    """Special fuction that remove the walls inside of the sans. pattern"""
     for x in range(width):
         for y in range(height):
             cell = grid[x][y]
