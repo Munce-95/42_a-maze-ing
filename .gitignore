@@ -1,0 +1,6 @@
+.pre-commit-config.yaml
+__pycache__/
+*.pyc
+venv/
+test*.py
+.vscode
