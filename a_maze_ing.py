@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
 import sys
+import subprocess
 from typing import Tuple, List, Any
 from errors import exit_program
-from algorithms.wilson import wilson_main
+from algorithms.wilson import wilson_main, run_session
 from parsing import (
     check_raw_data,
     check_args,
@@ -20,14 +21,15 @@ def main() -> None:
     check_raw_data(retrieved_data)
     check_values(retrieved_data)
     parsed: Data = get_parsed_values(retrieved_data)
-    print(parsed.pattern)
 
     # CEL PART :
     new_gen: Tuple[List[List[str]], int, int, bool, List[str]] = wilson_main(parsed)
+    run_session(parsed, new_gen)
 
 
 if __name__ == "__main__":
     try:
+        subprocess.run("clear")
         main()
     except (TypeError,
             IsADirectoryError,
