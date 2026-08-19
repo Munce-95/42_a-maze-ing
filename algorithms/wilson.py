@@ -261,17 +261,21 @@ def run_session(parsed: NamedTuple, new_gen: Tuple[List[List[str]], int, int, bo
         print("q - Quit")
         choice = input("Select an option: ")
         if choice == "1":
+            subprocess.run("clear")
             matrix, r_w, r_h, is_sans, _ = wilson_main(parsed)
             bg_list = get_bg_list_for_pattern(is_sans, theme_index)
         elif choice == "2":
+            subprocess.run("clear")
             show_path = not show_path
         elif choice == "3":
+            subprocess.run("clear")
             theme_index += 1
             bg_list = get_bg_list_for_pattern(is_sans, theme_index)
         elif choice == "q":
             subprocess.run("clear")
             sys.exit(0)
         else:
+            subprocess.run("clear")
             print("Warning: learn to read options. Try again.", file=sys.stderr)
         temp: List[str] = bg_list.copy()
         if not show_path:
