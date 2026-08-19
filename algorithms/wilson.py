@@ -229,7 +229,7 @@ def render_terminal_blocks(
     .: The shortest path from entry to exit
     M: The entry of the maze
     N: The exit of the maze
-    default_color: all the way inside the maze"""
+    default_color: The "ground" of the maze"""
     color_map: Dict[str, str] = {
         "W": bg_list[0],
         "B": bg_list[1],
