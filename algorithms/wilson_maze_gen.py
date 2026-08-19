@@ -43,7 +43,7 @@ def non_perfect(
         grid: List[List[Cell]],
         width: int,
         height: int,
-        ratio: float = 0.3) -> None:
+        ratio: float = 0.15) -> None:
     remove_walls = []
     for x in range(width):
         for y in range(height):
@@ -223,6 +223,10 @@ def render_terminal_blocks(
                 line += "\033[48;2;71;130;201m" + "  " + "\033[0m"
             elif char == ".":
                 line += current_bg_list[4] + "  " + "\033[0m"
+            elif char == "M":
+                line += "\033[48;2;40;210;40m" + "  " + "\033[0m"
+            elif char == "N":
+                line += "\033[48;2;230;25;25m" + "  " + "\033[0m"
             else:
                 line += current_bg_list[3] + "  " + "\033[0m"
         print(line)
@@ -233,5 +237,5 @@ def wilson_main(parsed: NamedTuple) -> None:
     maze, is_sans = generate_wilson(WIDTH, HEIGHT, PATTERN, parsed)
     matrix, r_w, r_h = build_matrix_1x1(maze, WIDTH, HEIGHT, is_sans=is_sans)
     path = solve_dijkstra(maze, parsed)
-    mark_path_in_matrix(matrix, path)
+    mark_path_in_matrix(matrix, path, parsed)
     render_terminal_blocks(matrix, r_w, r_h)

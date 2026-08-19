@@ -1,4 +1,4 @@
-# ===== VARIABLES ===== #
+# ===== CACHES ===== #
 
 RM_CACHE = rm -rf .mypy_cache .pytest_cache
 RM_PYCACHE = find . -type d -name "__pycache__" -exec rm -rf {} +
