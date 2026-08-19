@@ -1,6 +1,6 @@
 import sys
 import os
-import typing
+from typing import Any, Tuple, List
 from utils_files import (nonblank_lines,
                          get_coords_pattern,
                          Data,
@@ -23,8 +23,8 @@ def check_args() -> None:
         raise IsADirectoryError(f"Error: '{sys.argv[1]}' is a directory.")
 
 
-def retrieve_raw_data(config_file: str) -> dict[str, typing.Any]:
-    raw_config: dict[str, typing.Any] = {}
+def retrieve_raw_data(config_file: str) -> dict[str, Any]:
+    raw_config: dict[str, Any] = {}
     try:
         with open(config_file) as f:
             for line in nonblank_lines(f):
@@ -48,7 +48,7 @@ def retrieve_raw_data(config_file: str) -> dict[str, typing.Any]:
     return raw_config
 
 
-def check_raw_data(raw_config: dict[str, typing.Any]) -> None:
+def check_raw_data(raw_config: dict[str, Any]) -> None:
     if len(raw_config) < 6:
         raise ValueError("Error: there must be at least 6 keys"
                          " in the <config_file>.")
@@ -68,7 +68,19 @@ def check_raw_data(raw_config: dict[str, typing.Any]) -> None:
             raise KeyError("Error: one or more mandatory key(s) missing.")
 
 
-def _check_dimensions(dict_config: dict[str, typing.Any]) -> tuple[int, int]:
+def _check_dimensions(dict_config: dict[str, Any]) -> tuple[int, int]:
+    """
+    Checking that WIDTH and HEIGHT are valid integers.
+
+    Args:
+        dict_config: The dict we are trying to build with parsed data from config.txt
+
+    Returns:
+        A tuple[int, int] holding our WIDTH and HEIGHT
+
+    Raises:
+        ValueError if WIDTH and HEIGHT are not valid integers or if they are not between 3 and 50.
+    """
     try:
         width: int = int(dict_config["WIDTH"])
         dict_config.update({"WIDTH": width})
@@ -83,7 +95,7 @@ def _check_dimensions(dict_config: dict[str, typing.Any]) -> tuple[int, int]:
     return (dict_config["WIDTH"], dict_config["HEIGHT"])
 
 
-def _check_perfect(dict_config: dict[str, typing.Any]) -> None:
+def _check_perfect(dict_config: dict[str, Any]) -> None:
     # checking that PERFECT only accepts "true" or
     # "false" and make it a boolean
     perfect: str = dict_config.get("PERFECT", "").lower()
@@ -93,7 +105,7 @@ def _check_perfect(dict_config: dict[str, typing.Any]) -> None:
     dict_config["PERFECT"] = perfect == "true"
 
 
-def _check_output_file(dict_config: dict[str, typing.Any]) -> None:
+def _check_output_file(dict_config: dict[str, Any]) -> None:
     # checking that the output file is a .txt
     output: str = dict_config["OUTPUT_FILE"]
     if not output.endswith(".txt"):
@@ -101,7 +113,7 @@ def _check_output_file(dict_config: dict[str, typing.Any]) -> None:
     dict_config.update({"OUTPUT_FILE": output})
 
 
-def _check_entry_format(dict_config: dict[str, typing.Any]) -> tuple[int, int]:
+def _check_entry_format(dict_config: dict[str, Any]) -> tuple[int, int]:
     # checking that ENTRY has 2 valid integers
     # and making them a tuple[int, int]
     values = dict_config["ENTRY"].split(',', 1)
@@ -115,7 +127,7 @@ def _check_entry_format(dict_config: dict[str, typing.Any]) -> tuple[int, int]:
     return entry_coords
 
 
-def _check_exit_format(dict_config: dict[str, typing.Any]) -> tuple[int, int]:
+def _check_exit_format(dict_config: dict[str, Any]) -> tuple[int, int]:
     # checking that EXIT has 2 valid integers and making them a tuple[int, int]
     values = dict_config["EXIT"].split(',', 1)
     if len(values) != 2:
@@ -145,7 +157,7 @@ def _check_entry_exit_equality(entry_coords: tuple[int, int],
         raise ValueError("Error: ENTRY and EXIT cannot be the same.")
 
 
-def _check_pattern_inclusion(dict_config: dict[str, typing.Any]) -> str:
+def _check_pattern_inclusion(dict_config: dict[str, Any]) -> str:
     patterns: list[str] = ["PATTERN_PENGUIN",
                            "PATTERN_HEART",
                            "PATTERN_CEL",
@@ -192,7 +204,7 @@ def _check_pattern_displayable(width_height: tuple[int, int],
                              f" and ({coords['end_x']}, {coords['end_y']})")
 
 
-def check_values(dict_config: dict[str, typing.Any]) -> None:
+def check_values(dict_config: dict[str, Any]) -> None:
     width_height: tuple[int, int] = _check_dimensions(dict_config)
     _check_perfect(dict_config)
     _check_output_file(dict_config)
@@ -205,7 +217,7 @@ def check_values(dict_config: dict[str, typing.Any]) -> None:
                                entry_coords, exit_coords, pattern)
 
 
-def get_parsed_values(dict_config: dict[str, typing.Any]) -> Data:
+def get_parsed_values(dict_config: dict[str, Any]) -> Data:
     parsed_values = Data(dict_config["WIDTH"],
                          dict_config["HEIGHT"],
                          dict_config["ENTRY"],
