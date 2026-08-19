@@ -1,5 +1,5 @@
 import random
-from typing import List, Tuple, NamedTuple
+from typing import List, Tuple, Dict, NamedTuple
 from utils_files.pattern import PATTERN_SANS, get_pattern_by_name
 from utils_files.themes import get_bg_list_for_pattern
 from algorithms.dijkstra import solve_dijkstra, mark_path_in_matrix
@@ -92,18 +92,18 @@ def apply_pattern(
 
 
 def get_unblocked_neighbors(
-    grid: List[List[Cell]],
-    cell: Cell,
-    width: int,
-    height: int) -> List[Cell]:
+        grid: List[List[Cell]],
+        cell: Cell,
+        width: int,
+        height: int) -> List[Cell]:
     """Return the cells that are not obstacles"""
     neighbors = []
     for dx, dy in [(0, -1), (1, 0), (0, 1), (-1, 0)]:
         nx, ny = cell.x + dx, cell.y + dy
         if (
-            0 <= nx < width
-            and 0 <= ny < height
-            and not is_obstacle(grid[nx][ny])):
+                0 <= nx < width
+                and 0 <= ny < height
+                and not is_obstacle(grid[nx][ny])):
             neighbors.append(grid[nx][ny])
     return neighbors
 
@@ -149,7 +149,7 @@ def build_matrix_1x1(
         width: int,
         height: int,
         is_sans: bool = False) -> Tuple[List[List[str]], int, int]:
-    
+    """This function build the maze with characters"""
     render_w = width * 2 + 1
     render_h = height * 2 + 1
     output_grid = [["W" for _ in range(render_w)] for _ in range(render_h)]
@@ -176,18 +176,23 @@ def build_matrix_1x1(
 
 
 def _merge_sans_blocks(
-    grid: List[List[Cell]],
-    output_grid: List[List[str]],
-    width: int,
-    height: int) -> None:
+        grid: List[List[Cell]],
+        output_grid: List[List[str]],
+        width: int,
+        height: int) -> None:
     """Remplissage spécial pour fusionner les blocs du motif Sans."""
     for x in range(width):
         for y in range(height):
             cell = grid[x][y]
             if is_obstacle(cell):
                 rx, ry = x * 2 + 1, y * 2 + 1
-                char = "W" if cell.is_blocked else ("Y" if cell.sans_eye else "O")
-
+                if cell.is_blocked:
+                    char = "W"
+                else:
+                    if cell.sans_eye:
+                        char = "Y"
+                    else:
+                        char = "O"
                 output_grid[ry][rx] = char
                 output_grid[ry][rx + 1] = char
                 output_grid[ry + 1][rx] = char
@@ -211,10 +216,10 @@ def _merge_sans_blocks(
 
 
 def render_terminal_blocks(
-    matrix: List[List[str]],
-    render_w: int,
-    render_h: int,
-    bg_list: List[str]) -> None:
+        matrix: List[List[str]],
+        render_w: int,
+        render_h: int,
+        bg_list: List[str]) -> None:
     """This function is the one who is rendering the maze using ANSI code,
     with the color palette selected in the 'themes.py' file
     W: Wall
@@ -244,9 +249,10 @@ def render_terminal_blocks(
 
 
 def wilson_main(parsed: NamedTuple) -> None:
-    WIDTH, HEIGHT, PATTERN = parsed.width, parsed.height, parsed.pattern
-    maze, is_sans = generate_wilson(WIDTH, HEIGHT, PATTERN, parsed)
-    matrix, r_w, r_h = build_matrix_1x1(maze, WIDTH, HEIGHT, is_sans=is_sans)
+    """Main function to generate the maze and the path"""
+    width, height, pattern = parsed.width, parsed.height, parsed.pattern
+    maze, is_sans, bg_list = generate_wilson(width, height, pattern, parsed)
+    matrix, r_w, r_h = build_matrix_1x1(maze, width, height, is_sans=is_sans)
     path = solve_dijkstra(maze, parsed)
     mark_path_in_matrix(matrix, path, parsed)
-    render_terminal_blocks(matrix, r_w, r_h)
+    render_terminal_blocks(matrix, r_w, r_h, bg_list)
