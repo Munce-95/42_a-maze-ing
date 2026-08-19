@@ -1,23 +1,12 @@
 import random
 from typing import List, Tuple, NamedTuple
-from utils_files.pattern import pattern_list, PATTERN_SANS, PATTERN_PENGUIN, get_pattern_by_name
+from utils_files.pattern import PATTERN_SANS, get_pattern_by_name
 from utils_files.themes import get_bg_list_for_pattern
 from algorithms.dijkstra import solve_dijkstra, mark_path_in_matrix
+from utils_files.cell import Cell
 
 
 current_bg_list: List[str] = []
-
-class Cell:
-    def __init__(
-            self,
-            x: int,
-            y: int) -> None:
-        self.x = x
-        self.y = y
-        self.walls = {'N': True, 'E': True, 'S': True, 'W': True}
-        self.is_blocked = False
-        self.in_symbol = False
-        self.sans_eye = False
 
 
 def remove_wall(
@@ -52,14 +41,22 @@ def non_perfect(
                 continue
             if cell.walls['E'] and x + 1 < width:
                 neighbor = grid[x + 1][y]
-                if not (neighbor.is_blocked or neighbor.in_symbol or neighbor.sans_eye):
+                if not (
+                        neighbor.is_blocked
+                        or neighbor.in_symbol
+                        or neighbor.sans_eye):
                     remove_walls.append((cell, neighbor))
             if cell.walls['S'] and y + 1 < height:
                 neighbor = grid[x][y + 1]
-                if not (neighbor.is_blocked or neighbor.in_symbol or neighbor.sans_eye):
+                if not (
+                        neighbor.is_blocked
+                        or neighbor.in_symbol
+                        or neighbor.sans_eye):
                     remove_walls.append((cell, neighbor))
     num_to_remove = int(len(remove_walls) * ratio)
-    walls_to_remove = random.sample(remove_walls, min(num_to_remove, len(remove_walls)))
+    walls_to_remove = random.sample(
+            remove_walls,
+            min(num_to_remove, len(remove_walls)))
     for cell1, cell2 in walls_to_remove:
         remove_wall(cell1, cell2)
 
@@ -224,9 +221,9 @@ def render_terminal_blocks(
             elif char == ".":
                 line += current_bg_list[4] + "  " + "\033[0m"
             elif char == "M":
-                line += "\033[48;2;40;210;40m" + "  " + "\033[0m"
+                line += "\033[48;2;60;115;210m" + "  " + "\033[0m"
             elif char == "N":
-                line += "\033[48;2;230;25;25m" + "  " + "\033[0m"
+                line += "\033[48;2;210;120;20m" + "  " + "\033[0m"
             else:
                 line += current_bg_list[3] + "  " + "\033[0m"
         print(line)

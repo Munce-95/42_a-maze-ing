@@ -1,6 +1,12 @@
 import heapq
+from typing import List, NamedTuple
+from utils_files.cell import Cell
 
-def get_dijkstra_neighbors(grid, cell, parsed):
+
+def get_dijkstra_neighbors(
+        grid: List[List[Cell]],
+        cell: Cell,
+        parsed: NamedTuple) -> List[Cell]:
     neighbors = []
     x, y = cell.x, cell.y
     if not cell.walls['N'] and y > 0:
@@ -14,7 +20,9 @@ def get_dijkstra_neighbors(grid, cell, parsed):
     return neighbors
 
 
-def solve_dijkstra(grid, parsed):
+def solve_dijkstra(
+        grid: List[List[Cell]],
+        parsed: NamedTuple) -> List[Cell]:
     start_cell = grid[parsed.entry[0]][parsed.entry[1]]
     end_cell = grid[parsed.exit_[0]][parsed.exit_[1]]
     distances = {(c.x, c.y): float('inf') for row in grid for c in row}
@@ -45,7 +53,10 @@ def solve_dijkstra(grid, parsed):
     return path[::-1]
 
 
-def mark_path_in_matrix(matrix, path, parsed):
+def mark_path_in_matrix(
+        matrix: List[List[str]],
+        path: List[Cell],
+        parsed: NamedTuple) -> None:
     for i in range(len(path)):
         cell = path[i]
         rx, ry = cell.x * 2 + 1, cell.y * 2 + 1

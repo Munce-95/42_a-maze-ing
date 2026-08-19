@@ -26,7 +26,6 @@ def main() -> None:
     wilson_main(parsed)
 
 
-
 if __name__ == "__main__":
     try:
         main()
