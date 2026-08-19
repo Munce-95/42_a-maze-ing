@@ -9,9 +9,15 @@ from utils_files.cell import Cell
 current_bg_list: List[str] = []
 
 
+def is_obstacle(cell: Cell) -> bool:
+    """Check if the cell is part of the symbol or a wall"""
+    return cell.is_blocked or cell.in_symbol or cell.sans_eye
+
+
 def remove_wall(
         cell1: Cell,
         cell2: Cell) -> None:
+    """This function is used to remove a wall between two cells"""
     dx = cell2.x - cell1.x
     dy = cell2.y - cell1.y
     if dx == 1:
@@ -33,75 +39,71 @@ def non_perfect(
         width: int,
         height: int,
         ratio: float = 0.15) -> None:
-    remove_walls = []
+    """This function break random wall in the maze already generated
+    to make it 'non-perfect'"""
+    remove_walls: List[Tuple[Cell, Cell]] = []
     for x in range(width):
         for y in range(height):
             cell = grid[x][y]
-            if cell.is_blocked or cell.in_symbol or cell.sans_eye:
+            if is_obstacle(cell):
                 continue
             if cell.walls['E'] and x + 1 < width:
                 neighbor = grid[x + 1][y]
-                if not (
-                        neighbor.is_blocked
-                        or neighbor.in_symbol
-                        or neighbor.sans_eye):
+                if not is_obstacle(neighbor):
                     remove_walls.append((cell, neighbor))
             if cell.walls['S'] and y + 1 < height:
                 neighbor = grid[x][y + 1]
-                if not (
-                        neighbor.is_blocked
-                        or neighbor.in_symbol
-                        or neighbor.sans_eye):
+                if not is_obstacle(neighbor):
                     remove_walls.append((cell, neighbor))
     num_to_remove = int(len(remove_walls) * ratio)
     walls_to_remove = random.sample(
-            remove_walls,
-            min(num_to_remove, len(remove_walls)))
+        remove_walls,
+        min(num_to_remove, len(remove_walls))
+    )
     for cell1, cell2 in walls_to_remove:
         remove_wall(cell1, cell2)
 
 
-def apply_42_pattern(
+def apply_pattern(
         grid: List[List[Cell]],
         width: int,
         height: int,
         pattern: str) -> bool:
-    global current_bg_list
+    """This function will pregenerate the pattern within the maze's edge"""
     pattern_matrix = get_pattern_by_name(pattern)
     is_sans = (pattern_matrix == PATTERN_SANS)
-    current_bg_list = get_bg_list_for_pattern(is_sans)
-    pat_h = len(pattern_matrix)
-    pat_w = len(pattern_matrix[0])
+    bg_list = get_bg_list_for_pattern(is_sans)
+    if width < 10 or height < 10:
+        return is_sans, bg_list
+    pat_h, pat_w = len(pattern_matrix), len(pattern_matrix[0])
     start_x = (width - pat_w) // 2
     start_y = (height - pat_h) // 2
     for py in range(pat_h):
-        if (width < 10 or height < 10):
-            break
         for px in range(pat_w):
-            if pattern_matrix[py][px] == 1:
-                grid[start_x + px][start_y + py].is_blocked = True
-            elif pattern_matrix[py][px] == 2:
-                grid[start_x + px][start_y + py].in_symbol = True
-            elif pattern_matrix[py][px] == 3:
-                grid[start_x + px][start_y + py].sans_eye = True
-    return is_sans
+            val = pattern_matrix[py][px]
+            target = grid[start_x + px][start_y + py]
+            if val == 1:
+                target.is_blocked = True
+            elif val == 2:
+                target.in_symbol = True
+            elif val == 3:
+                target.sans_eye = True
+    return is_sans, bg_list
 
 
 def get_unblocked_neighbors(
-        grid: List[List[Cell]],
-        cell: Cell,
-        width: int,
-        height: int) -> List[Cell]:
+    grid: List[List[Cell]],
+    cell: Cell,
+    width: int,
+    height: int) -> List[Cell]:
+    """Return the cells that are not obstacles"""
     neighbors = []
-    directions = [(0, -1), (1, 0), (0, 1), (-1, 0)]
-    for dx, dy in directions:
+    for dx, dy in [(0, -1), (1, 0), (0, 1), (-1, 0)]:
         nx, ny = cell.x + dx, cell.y + dy
         if (
-                0 <= nx < width
-                and 0 <= ny < height
-                and not grid[nx][ny].is_blocked
-                and not grid[nx][ny].in_symbol
-                and not grid[nx][ny].sans_eye):
+            0 <= nx < width
+            and 0 <= ny < height
+            and not is_obstacle(grid[nx][ny])):
             neighbors.append(grid[nx][ny])
     return neighbors
 
@@ -111,17 +113,16 @@ def generate_wilson(
         height: int,
         pattern: str,
         parsed: NamedTuple) -> List[List[Cell]]:
+    """This function is the main part of the maze.
+    It generate the whole maze using the Wilson's Algorithm"""
     grid = [[Cell(x, y) for y in range(height)] for x in range(width)]
-    is_sans = apply_42_pattern(grid, width, height, pattern)
+    is_sans, bg_list = apply_pattern(grid, width, height, pattern)
     unvisited = [
         grid[x][y] for x in range(width)
         for y in range(height)
-        if (
-            not grid[x][y].is_blocked
-            and not grid[x][y].in_symbol
-            and not grid[x][y].sans_eye)]
+        if not is_obstacle(grid[x][y])]
     if not unvisited:
-        return grid, is_sans
+        return grid, is_sans, bg_list
     first_cell = random.choice(unvisited)
     unvisited.remove(first_cell)
     while unvisited:
@@ -140,7 +141,7 @@ def generate_wilson(
                 unvisited.remove(path[i])
     if not parsed.perfect:
         non_perfect(grid, width, height)
-    return grid, is_sans
+    return grid, is_sans, bg_list
 
 
 def build_matrix_1x1(
@@ -148,20 +149,21 @@ def build_matrix_1x1(
         width: int,
         height: int,
         is_sans: bool = False) -> Tuple[List[List[str]], int, int]:
+    
     render_w = width * 2 + 1
     render_h = height * 2 + 1
-    output_grid = [["#" for _ in range(render_w)] for _ in range(render_h)]
+    output_grid = [["W" for _ in range(render_w)] for _ in range(render_h)]
     for x in range(width):
         for y in range(height):
             cell = grid[x][y]
-            rx = x * 2 + 1
-            ry = y * 2 + 1
+            rx, ry = x * 2 + 1, y * 2 + 1
+
             if cell.is_blocked:
-                output_grid[ry][rx] = "L"
+                output_grid[ry][rx] = "B"
             elif cell.in_symbol:
-                output_grid[ry][rx] = "O"
+                output_grid[ry][rx] = "C"
             elif cell.sans_eye:
-                output_grid[ry][rx] = "Y"
+                output_grid[ry][rx] = "I"
             else:
                 output_grid[ry][rx] = " "
                 if not cell.walls['E']:
@@ -169,63 +171,75 @@ def build_matrix_1x1(
                 if not cell.walls['S']:
                     output_grid[ry + 1][rx] = " "
     if is_sans:
-        for x in range(width):
-            for y in range(height):
-                cell = grid[x][y]
-                if cell.is_blocked or cell.in_symbol or cell.sans_eye:
-                    rx = x * 2 + 1
-                    ry = y * 2 + 1
-                    if cell.is_blocked:
-                        char = "#"
-                    elif cell.sans_eye:
-                        char = "Y"
-                    else:
-                        char = "O"
-                    output_grid[ry][rx] = char
-                    output_grid[ry][rx + 1] = char
-                    output_grid[ry + 1][rx] = char
-                    output_grid[ry + 1][rx + 1] = char
-                    if x + 1 < width and (
-                        (cell.is_blocked and grid[x + 1][y].is_blocked) or
-                        (cell.in_symbol and grid[x + 1][y].in_symbol) or
-                        (cell.sans_eye and grid[x + 1][y].sans_eye)
-                    ):
-                        output_grid[ry][rx + 2] = char
-                        output_grid[ry + 1][rx + 2] = char
-                    if y + 1 < height and (
-                        (cell.is_blocked and grid[x][y + 1].is_blocked) or
-                        (cell.in_symbol and grid[x][y + 1].in_symbol) or
-                        (cell.sans_eye and grid[x][y + 1].sans_eye)
-                    ):
-                        output_grid[ry + 2][rx] = char
-                        output_grid[ry + 2][rx + 1] = char
+        _merge_sans_blocks(grid, output_grid, width, height)
     return output_grid, render_w, render_h
 
 
+def _merge_sans_blocks(
+    grid: List[List[Cell]],
+    output_grid: List[List[str]],
+    width: int,
+    height: int) -> None:
+    """Remplissage spécial pour fusionner les blocs du motif Sans."""
+    for x in range(width):
+        for y in range(height):
+            cell = grid[x][y]
+            if is_obstacle(cell):
+                rx, ry = x * 2 + 1, y * 2 + 1
+                char = "W" if cell.is_blocked else ("Y" if cell.sans_eye else "O")
+
+                output_grid[ry][rx] = char
+                output_grid[ry][rx + 1] = char
+                output_grid[ry + 1][rx] = char
+                output_grid[ry + 1][rx + 1] = char
+
+                if x + 1 < width and (
+                    (cell.is_blocked and grid[x + 1][y].is_blocked)
+                    or (cell.in_symbol and grid[x + 1][y].in_symbol)
+                    or (cell.sans_eye and grid[x + 1][y].sans_eye)
+                ):
+                    output_grid[ry][rx + 2] = char
+                    output_grid[ry + 1][rx + 2] = char
+
+                if y + 1 < height and (
+                    (cell.is_blocked and grid[x][y + 1].is_blocked)
+                    or (cell.in_symbol and grid[x][y + 1].in_symbol)
+                    or (cell.sans_eye and grid[x][y + 1].sans_eye)
+                ):
+                    output_grid[ry + 2][rx] = char
+                    output_grid[ry + 2][rx + 1] = char
+
+
 def render_terminal_blocks(
-        matrix: List[List[str]],
-        render_w: int,
-        render_h: int) -> None:
+    matrix: List[List[str]],
+    render_w: int,
+    render_h: int,
+    bg_list: List[str]) -> None:
+    """This function is the one who is rendering the maze using ANSI code,
+    with the color palette selected in the 'themes.py' file
+    W: Wall
+    B: Blocked (Border of the pattern)
+    C: Core (The color of the pattern)
+    I: Eye (Used exclusivly for the sans. pattern)
+    .: The shortest opath from entry to exit
+    M: The entry of the maze
+    N: The exit of the maze"""
+    color_map: Dict[str, str] = {
+        "W": bg_list[0],
+        "B": bg_list[1],
+        "C": bg_list[2],
+        "I": "\033[48;2;71;130;201m",
+        ".": bg_list[4],
+        "M": "\033[48;2;60;115;210m",
+        "N": "\033[48;2;210;120;20m",
+    }
+    default_color = bg_list[3]
+    reset_code = "\033[0m"
     for y in range(render_h):
-        line = ""
-        for x in range(render_w):
-            char = matrix[y][x]
-            if char == "#":
-                line += current_bg_list[0] + "  " + "\033[0m"
-            elif char == "L":
-                line += current_bg_list[1] + "  " + "\033[0m"
-            elif char == "O":
-                line += current_bg_list[2] + "  " + "\033[0m"
-            elif char == "Y":
-                line += "\033[48;2;71;130;201m" + "  " + "\033[0m"
-            elif char == ".":
-                line += current_bg_list[4] + "  " + "\033[0m"
-            elif char == "M":
-                line += "\033[48;2;60;115;210m" + "  " + "\033[0m"
-            elif char == "N":
-                line += "\033[48;2;210;120;20m" + "  " + "\033[0m"
-            else:
-                line += current_bg_list[3] + "  " + "\033[0m"
+        line = "".join(
+            f"{color_map.get(matrix[y][x], default_color)}  {reset_code}"
+            for x in range(render_w)
+        )
         print(line)
 
 
