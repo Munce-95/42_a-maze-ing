@@ -22,25 +22,29 @@ CONF = config.txt
 all: run
 
 run:
-	@echo "Running program"
+	@clear
 	$(P3) $(FILE) $(CONF)
 
 lint:
+	@clear
 	@echo "Testing flake8"
 	$(F8)
 	@echo "Testing mypy"
 	$(MP) $(FLAGS)
 
 lint-strict:
+	@clear
 	@echo "Testing flake8"
 	$(F8)
 	@echo "Testing mypy --strict"
 	$(MPS)
 
 install:
+	@clear
 	@echo "No requirements to install"
 
 clean:
+	@clear
 	@echo "Cleaning temporary files..."
 	$(RM_CACHE)
 	$(RM_PYCACHE)
