@@ -248,7 +248,19 @@ def render_terminal_blocks(
         print(line)
 
 
-def wilson_main(parsed: NamedTuple) -> None:
+def run_session(parsed: NamedTuple, new_gen: Tuple[List[List[str]], int, int, bool, List[str]]) -> None:
+    matrix, r_w, r_h, is_sans, bg_list = new_gen
+    theme_index: int = 0
+    show_path: bool = True
+    while True:
+        print("1 - Re-generate Maze")
+        print("2 - Show/hide path")
+        print("3 - Change colour")
+        print("q - Quit")
+                 
+
+
+def wilson_main(parsed: NamedTuple) -> Tuple[List[List[str]], int, int, bool, List[str]]:
     """Main function to generate the maze and the path"""
     width, height, pattern = parsed.width, parsed.height, parsed.pattern
     maze, is_sans, bg_list = generate_wilson(width, height, pattern, parsed)
@@ -256,3 +268,4 @@ def wilson_main(parsed: NamedTuple) -> None:
     path = solve_dijkstra(maze, parsed)
     mark_path_in_matrix(matrix, path, parsed)
     render_terminal_blocks(matrix, r_w, r_h, bg_list)
+    return matrix, r_w, r_h, is_sans, bg_list

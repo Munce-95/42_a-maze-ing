@@ -55,7 +55,7 @@ THEMES = [
 ]
 
 
-def get_bg_list_for_pattern(is_sans_pattern: bool, theme_index: int) -> List[str]:
+def get_bg_list_for_pattern(is_sans_pattern: bool, theme_index: int = 0) -> List[str]:
     if is_sans_pattern:
         current_theme = next(t for t in THEMES if t.name == "sans.")
     else:
