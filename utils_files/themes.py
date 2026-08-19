@@ -27,12 +27,12 @@ THEMES = [
     Theme(RGB(0, 0, 0), RGB(255, 255, 255), RGB(57, 56, 82), RGB(200, 194, 226), "sans.")
 ]
 
-def get_bg_list_for_pattern(is_sans_pattern: bool) -> List[str]:
+def get_bg_list_for_pattern(is_sans_pattern: bool, theme_index: int = 0) -> List[str]:
     if is_sans_pattern:
         current_theme = next(t for t in THEMES if t.name == "sans.")
     else:
         available_themes = [t for t in THEMES if t.name != "sans."]
-        current_theme = random.choice(available_themes)
+        current_theme = available_themes[theme_index % len(available_themes)]
     return [
         current_theme.wall.to_ansi(),
         current_theme.logo.to_ansi(),

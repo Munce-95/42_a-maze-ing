@@ -44,10 +44,8 @@ def apply_42_pattern(
         width: int,
         height: int,
         pattern: str) -> bool:
-    global current_bg_list
     pattern_matrix = get_pattern_by_name(pattern)
     is_sans = (pattern_matrix == PATTERN_SANS)
-    current_bg_list = get_bg_list_for_pattern(is_sans)
     pat_h = len(pattern_matrix)
     pat_w = len(pattern_matrix[0])
     start_x = (width - pat_w) // 2
