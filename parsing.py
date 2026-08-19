@@ -25,21 +25,26 @@ def check_args() -> None:
 
 def retrieve_raw_data(config_file: str) -> dict[str, typing.Any]:
     raw_config: dict[str, typing.Any] = {}
-    with open(config_file) as f:
-        for line in nonblank_lines(f):
-            if line.startswith('#'):
-                continue
-            elif line.startswith(' '):
-                raise KeyError("Error: keys cannot start with a space.")
-            elif line.count('=') > 1:
-                raise ValueError("Error: there can only be one"
-                                 " key/value pair per line.")
-            else:
-                key, value = line.split('=', 1)
-                if key.upper().strip() in raw_config:
+    try:
+        with open(config_file) as f:
+            for line in nonblank_lines(f):
+                if line.startswith('#'):
                     continue
+                elif line.startswith(' '):
+                    raise KeyError("Error: keys cannot start with a space.")
+                elif line.count('=') > 1:
+                    raise ValueError("Error: there can only be one"
+                                    " key/value pair per line.")
                 else:
-                    raw_config.update({key.upper().strip(): value.strip()})
+                    key, value = line.split('=', 1)
+                    if key.upper().strip() in raw_config:
+                        continue
+                    else:
+                        raw_config.update({key.upper().strip(): value.strip()})
+    except UnicodeDecodeError:
+        raise ValueError("Error: config file is not valid text.")
+    except PermissionError:
+        raise PermissionError("Error: permission denied.")
     return raw_config
 
 
