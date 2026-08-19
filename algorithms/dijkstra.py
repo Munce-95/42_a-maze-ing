@@ -60,11 +60,11 @@ def mark_path_in_matrix(
     for i in range(len(path)):
         cell = path[i]
         rx, ry = cell.x * 2 + 1, cell.y * 2 + 1
-        matrix[rx][ry] = "."
-        matrix[parsed.entry[0] * 2 + 1][parsed.entry[1] * 2 + 1] = "M"
-        matrix[parsed.exit_[0] * 2 + 1][parsed.exit_[1] * 2 + 1] = "N"
+        matrix[ry][rx] = "."
+        matrix[parsed.entry[1] * 2 + 1][parsed.entry[0] * 2 + 1] = "M"
+        matrix[parsed.exit_[1] * 2 + 1][parsed.exit_[0] * 2 + 1] = "N"
         if i < len(path) - 1:
             next_cell = path[i + 1]
             mid_x = (rx + (next_cell.x * 2 + 1)) // 2
             mid_y = (ry + (next_cell.y * 2 + 1)) // 2
-            matrix[mid_x][mid_y] = "."
+            matrix[mid_y][mid_x] = "."
