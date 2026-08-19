@@ -226,9 +226,10 @@ def render_terminal_blocks(
     B: Blocked (Border of the pattern)
     C: Core (The color of the pattern)
     I: Eye (Used exclusivly for the sans. pattern)
-    .: The shortest opath from entry to exit
+    .: The shortest path from entry to exit
     M: The entry of the maze
-    N: The exit of the maze"""
+    N: The exit of the maze
+    default_color: all the way inside the maze"""
     color_map: Dict[str, str] = {
         "W": bg_list[0],
         "B": bg_list[1],

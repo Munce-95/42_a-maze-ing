@@ -1,5 +1,5 @@
 import heapq
-from typing import List, NamedTuple
+from typing import Dict, List, NamedTuple, Tuple
 from utils_files.cell import Cell
 
 
@@ -7,6 +7,7 @@ def get_dijkstra_neighbors(
         grid: List[List[Cell]],
         cell: Cell,
         parsed: NamedTuple) -> List[Cell]:
+    """Return the available cells"""
     neighbors = []
     x, y = cell.x, cell.y
     if not cell.walls['N'] and y > 0:
@@ -23,15 +24,17 @@ def get_dijkstra_neighbors(
 def solve_dijkstra(
         grid: List[List[Cell]],
         parsed: NamedTuple) -> List[Cell]:
+    """Calulate the shortest path from entry to exit"""
     start_cell = grid[parsed.entry[0]][parsed.entry[1]]
     end_cell = grid[parsed.exit_[0]][parsed.exit_[1]]
-    distances = {(c.x, c.y): float('inf') for row in grid for c in row}
-    predecessors = {}
+    distances: Dict[Tuple[int, int], float] = {
+        (c.x, c.y): float('inf') for row in grid for c in row
+    }
+    predecessors: Dict[Cell, Cell] = {}
     distances[(start_cell.x, start_cell.y)] = 0
-    pq = [(0, start_cell.x, start_cell.y)]
-
-    while pq:
-        current_dist, x, y = heapq.heappop(pq)
+    queue: List[Tuple[float, int, int]] = [(0.0, start_cell.x, start_cell.y)]
+    while queue:
+        current_dist, x, y = heapq.heappop(queue)
         current = grid[x][y]
         if current == end_cell:
             break
@@ -42,29 +45,33 @@ def solve_dijkstra(
             if new_dist < distances[(neighbor.x, neighbor.y)]:
                 distances[(neighbor.x, neighbor.y)] = new_dist
                 predecessors[neighbor] = current
-                heapq.heappush(pq, (new_dist, neighbor.x, neighbor.y))
-    path = []
-    curr = end_cell
-    while curr in predecessors:
-        path.append(curr)
-        curr = predecessors[curr]
-    if path or end_cell == start_cell:
+                heapq.heappush(queue, (new_dist, neighbor.x, neighbor.y))
+    path: List[Cell] = []
+    if end_cell in predecessors or end_cell == start_cell:
+        curr: Cell = end_cell
+        while curr in predecessors:
+            path.append(curr)
+            curr = predecessors[curr]
         path.append(start_cell)
-    return path[::-1]
+        path.reverse()
+    return path
 
 
 def mark_path_in_matrix(
         matrix: List[List[str]],
         path: List[Cell],
         parsed: NamedTuple) -> None:
-    for i in range(len(path)):
-        cell = path[i]
+    """Print the path in the maze"""
+    if not path:
+        return
+    for cell in path:
         rx, ry = cell.x * 2 + 1, cell.y * 2 + 1
         matrix[ry][rx] = "."
-        matrix[parsed.entry[1] * 2 + 1][parsed.entry[0] * 2 + 1] = "M"
-        matrix[parsed.exit_[1] * 2 + 1][parsed.exit_[0] * 2 + 1] = "N"
-        if i < len(path) - 1:
-            next_cell = path[i + 1]
-            mid_x = (rx + (next_cell.x * 2 + 1)) // 2
-            mid_y = (ry + (next_cell.y * 2 + 1)) // 2
-            matrix[mid_y][mid_x] = "."
+    for curr, nxt in zip(path, path[1:]):
+        mid_x = (curr.x * 2 + 1 + nxt.x * 2 + 1) // 2
+        mid_y = (curr.y * 2 + 1 + nxt.y * 2 + 1) // 2
+        matrix[mid_y][mid_x] = "."
+    entry_x, entry_y = parsed.entry
+    exit_x, exit_y = parsed.exit_
+    matrix[entry_y * 2 + 1][entry_x * 2 + 1] = "M"
+    matrix[exit_y * 2 + 1][exit_x * 2 + 1] = "N"
