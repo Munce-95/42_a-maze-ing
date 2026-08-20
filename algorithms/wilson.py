@@ -6,6 +6,7 @@ from typing import List, Tuple, Dict, NamedTuple
 from utils_files.pattern import PATTERN_SANS, get_pattern_by_name
 from utils_files.themes import get_bg_list_for_pattern
 from algorithms.dijkstra import solve_dijkstra, mark_path_in_matrix
+from algorithms.gen_output import write_output_file
 from utils_files.cell import Cell
 
 
@@ -283,6 +284,7 @@ def run_session(parsed: NamedTuple, new_gen: Tuple[List[List[str]], int, int, bo
     except (EOFError, KeyboardInterrupt):
         exit_program("Exiting program properly.")
 
+
 def wilson_main(parsed: NamedTuple) -> Tuple[List[List[str]], int, int, bool, List[str]]:
     """Main function to generate the maze and the path"""
     width, height, pattern = parsed.width, parsed.height, parsed.pattern
@@ -291,4 +293,5 @@ def wilson_main(parsed: NamedTuple) -> Tuple[List[List[str]], int, int, bool, Li
     path = solve_dijkstra(maze, parsed)
     mark_path_in_matrix(matrix, path, parsed)
     render_terminal_blocks(matrix, r_w, r_h, bg_list)
+    write_output_file(parsed.output_file, parsed.entry, parsed.exit_, maze, path)
     return matrix, r_w, r_h, is_sans, bg_list

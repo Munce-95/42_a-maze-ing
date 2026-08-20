@@ -3,6 +3,7 @@
 RM_CACHE = rm -rf .mypy_cache .pytest_cache
 RM_PYCACHE = find . -type d -name "__pycache__" -exec rm -rf {} +
 RM_PYC = find . -type f -name "*.pyc" -delete
+RM_OUTPUT = rm output_file.txt
 
 # ===== COMPILATION ===== #
 
@@ -49,6 +50,7 @@ clean:
 	$(RM_CACHE)
 	$(RM_PYCACHE)
 	$(RM_PYC)
+	$(RM_OUTPUT)
 	@echo "Clean done."
 
 .PHONY: all run lint lint-strict install clean
