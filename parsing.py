@@ -333,7 +333,7 @@ def check_values(dict_config: dict[str, Any]) -> None:
 
 def get_parsed_values(dict_config: dict[str, Any]) -> Data:
     """
-    Retrieving parsed values from dict and constructing and instance of Data
+    Retrieving parsed values from dict and constructing an instance of Data
 
     Args:
         dict_config: The config data being validated
