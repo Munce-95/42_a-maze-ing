@@ -1,19 +1,40 @@
 from typing import NamedTuple, List
-import random
 
 BG_CORE = "\033[48;2;255;255;255m"
 
 
 class RGB(NamedTuple):
+    """
+    An RGB colour, convertible to an ANSI background escape code
+
+    Args:
+        r: red channel, 0-255
+        g: green channel, 0-255
+        b: blue channel, 0-255
+    """
     r: int
     g: int
     b: int
 
     def to_ansi(self) -> str:
+        """
+        Returns:
+            This colour as an ANSI background-colour escape sequence
+        """
         return f"\033[48;2;{self.r};{self.g};{self.b}m"
 
 
 class Theme(NamedTuple):
+    """
+    A named colour scheme for rendering the maze in the terminal
+
+    Args:
+        wall: colour used for maze walls
+        logo: colour used for the pattern's outline/blocked cells
+        path: colour used for plain open-floor cells
+        way: colour used for the solved path's marked cells
+        name: the theme's identifier (e.g. "b/w", "pink", "sans.")
+    """
     wall: RGB
     logo: RGB
     path: RGB
@@ -55,12 +76,29 @@ THEMES = [
 ]
 
 
-def get_bg_list_for_pattern(is_sans_pattern: bool) -> List[str]:
+def get_bg_list_for_pattern(is_sans_pattern: bool, theme_index: int = 0) -> List[str]:
+    """
+    Builds the list of ANSI colours used to render one maze frame
+
+    If is_sans_pattern is True, always uses the fixed "sans." theme,
+    ignoring theme_index. Otherwise, selects a theme from THEMES
+    (excluding "sans.") by cycling through theme_index, wrapping
+    around once every theme has been used
+
+    Args:
+        is_sans_pattern: whether the maze's selected pattern is SANS
+        theme_index: cycling index into the available (non-SANS)
+            themes; wraps automatically via modulo
+
+    Returns:
+        A 5-element list of ANSI escape codes, in order:
+        [wall, logo, open-floor, path-default, solved-path]
+    """
     if is_sans_pattern:
         current_theme = next(t for t in THEMES if t.name == "sans.")
     else:
         available_themes = [t for t in THEMES if t.name != "sans."]
-        current_theme = random.choice(available_themes)
+        current_theme = available_themes[theme_index % len(available_themes)]
     return [
         current_theme.wall.to_ansi(),
         current_theme.logo.to_ansi(),

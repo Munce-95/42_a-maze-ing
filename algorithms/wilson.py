@@ -1,4 +1,7 @@
 import random
+import sys
+import subprocess
+from errors import exit_program
 from typing import List, Tuple, Dict, NamedTuple
 from utils_files.pattern import PATTERN_SANS, get_pattern_by_name
 from utils_files.themes import get_bg_list_for_pattern
@@ -249,7 +252,38 @@ def render_terminal_blocks(
         print(line)
 
 
-def wilson_main(parsed: NamedTuple) -> None:
+def run_session(parsed: NamedTuple, new_gen: Tuple[List[List[str]], int, int, bool, List[str]]) -> None:
+    matrix, r_w, r_h, is_sans, bg_list = new_gen
+    theme_index: int = 0
+    show_path: bool = True
+    try:
+        while True:
+            print("1 - Re-generate Maze")
+            print("2 - Show/hide path")
+            print("3 - Change colour")
+            print("q - Quit")
+            choice = input("Select an option: ")
+            if choice == "1":
+                matrix, r_w, r_h, is_sans, _ = wilson_main(parsed)
+                bg_list = get_bg_list_for_pattern(is_sans, theme_index)
+            elif choice == "2":
+                show_path = not show_path
+            elif choice == "3":
+                theme_index += 1
+                bg_list = get_bg_list_for_pattern(is_sans, theme_index)
+            elif choice == "q":
+                sys.exit(0)
+            else:
+                continue
+            temp: List[str] = bg_list.copy()
+            if not show_path:
+                temp[4] = temp[3]
+            subprocess.run("clear")
+            render_terminal_blocks(matrix, r_w, r_h, temp)
+    except (EOFError, KeyboardInterrupt):
+        exit_program("Exiting program properly.")
+
+def wilson_main(parsed: NamedTuple) -> Tuple[List[List[str]], int, int, bool, List[str]]:
     """Main function to generate the maze and the path"""
     width, height, pattern = parsed.width, parsed.height, parsed.pattern
     maze, is_sans, bg_list = generate_wilson(width, height, pattern, parsed)
@@ -257,3 +291,4 @@ def wilson_main(parsed: NamedTuple) -> None:
     path = solve_dijkstra(maze, parsed)
     mark_path_in_matrix(matrix, path, parsed)
     render_terminal_blocks(matrix, r_w, r_h, bg_list)
+    return matrix, r_w, r_h, is_sans, bg_list
