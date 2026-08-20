@@ -169,7 +169,7 @@ def _check_entry_format(dict_config: Dict[str, Any]) -> Tuple[int, int]:
         A Tuple holding ENTRY coordinates
 
     Raises:
-        ValueError if <x,y> format is not respected
+        ValueError if (x,y) format is not respected
         ValueError if ENTRY is not valid integers
     """
     values = dict_config["ENTRY"].split(',', 1)
@@ -194,7 +194,7 @@ def _check_exit_format(dict_config: Dict[str, Any]) -> Tuple[int, int]:
         A Tuple holding EXIT coordinates
 
     Raises:
-        ValueError if <x,y> format is not respected
+        ValueError if (x,y) format is not respected
         ValueError if EXIT is not valid integers
     """
     values = dict_config["EXIT"].split(',', 1)
@@ -216,8 +216,8 @@ def _check_entry_exit_bound(width_height: Tuple[int, int],
 
     Args:
         width_height: previously generated Tuple with WIDTH and HEIGHT
-        entry_coords: ENTRY coordinates <x,y>
-        exit_coords: EXIT coordinates <x,y>
+        entry_coords: ENTRY coordinates (x,y)
+        exit_coords: EXIT coordinates (x,y)
 
     Raises:
         ValueError if ENTRY or EXIT are set outside the grid
@@ -235,8 +235,8 @@ def _check_entry_exit_equality(entry_coords: Tuple[int, int],
     Making sure ENTRY and EXIT are different
 
     Args:
-        entry_coords: ENTRY coordinates <x,y>
-        exit_coords: EXIT coordinates <x,y>
+        entry_coords: ENTRY coordinates (x,y)
+        exit_coords: EXIT coordinates (x,y)
 
     Raises:
         ValueError if ENTRY and EXIT are the same
@@ -282,8 +282,8 @@ def _check_pattern_displayable(width_height: Tuple[int, int],
 
     Args:
         width_height: previously generated Tuple with WIDTH and HEIGHT
-        entry_coords: ENTRY coordinates <x,y>
-        exit_coords: EXIT coordinates <x,y>
+        entry_coords: ENTRY coordinates (x,y)
+        exit_coords: EXIT coordinates (x,y)
         pattern: previously selected pattern (or 42 by default)
 
     Raises:
