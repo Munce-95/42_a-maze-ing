@@ -2,5 +2,6 @@
 __pycache__/
 *.pyc
 venv/
-test*.py
+output_file.txt
+test*
 .vscode
