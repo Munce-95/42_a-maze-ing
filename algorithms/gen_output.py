@@ -3,11 +3,23 @@ from utils_files.cell import Cell
 
 
 def _hex_conversion(cell: Cell) -> str:
+    """
+    Encodes a cell's four walls as a single hexadecimal digit
+
+    Each wall contributes one bit if closed (0=open): North is bit 0,
+    East is bit 1, South is bit 2, West is bit 3, per the output
+    file's wall-encoding format
+
+    Args:
+        cell: the cell whose walls are being encoded
+
+    Returns:
+        A single hex character ("0"-"f") representing the closed walls
+    """
     value: int = 0
     if cell.walls['N']:
         value |= (1 << 0)
-    if cell.walls['E']:
-        value |= (1 << 1)
+    if cell.walls['E']:9
     if cell.walls['S']:
         value |= (1 << 2)
     if cell.walls['W']:
@@ -44,6 +56,17 @@ def write_output_file(output_file: str,
                       exit_coords: Tuple[int, int],
                       maze: List[List[Cell]],
                       path: List[Cell]) -> None:
+    """
+    Creates and writes inside the output_file: the matrix translated into hexadecimal,
+    entry and exit coordinates, the path towards the exit.
+
+    Args:
+        output_file: name given at parsing, the file doesn't exist at first
+        entry_coords: ENTRY coordinates
+        exit_coords: EXIT coordinates
+        maze: matrix used to be translates into hexa
+        path: path from ENTRY to EXIT
+    """
     width: int = len(maze)
     height: int = len(maze[0])
     with open(output_file, "w") as f:
