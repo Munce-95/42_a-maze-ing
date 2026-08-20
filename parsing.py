@@ -34,7 +34,7 @@ def retrieve_raw_data(config_file: str) -> dict[str, Any]:
                     raise KeyError("Error: keys cannot start with a space.")
                 elif line.count('=') > 1:
                     raise ValueError("Error: there can only be one"
-                                    " key/value pair per line.")
+                                     " key/value pair per line.")
                 else:
                     key, value = line.split('=', 1)
                     if key.upper().strip() in raw_config:
@@ -61,25 +61,27 @@ def check_raw_data(raw_config: dict[str, Any]) -> None:
                                " letters and not be commented.")
 
     # checking mandatory keys are in <config_file>
-    mandatory_keys: list[str] = \
+    mandatory_keys: List[str] = \
         ["WIDTH", "HEIGHT", "ENTRY", "EXIT", "OUTPUT_FILE", "PERFECT"]
     for key in mandatory_keys:
         if key not in raw_config:
             raise KeyError("Error: one or more mandatory key(s) missing.")
 
 
-def _check_dimensions(dict_config: dict[str, Any]) -> tuple[int, int]:
+def _check_dimensions(dict_config: dict[str, Any]) -> Tuple[int, int]:
     """
     Checking that WIDTH and HEIGHT are valid integers.
 
     Args:
-        dict_config: The dict we are trying to build with parsed data from config.txt
+        dict_config: The dict we are trying to build
+        with parsed data from config.txt
 
     Returns:
-        A tuple[int, int] holding our WIDTH and HEIGHT
+        A tuple holding our WIDTH and HEIGHT
 
     Raises:
-        ValueError if WIDTH and HEIGHT are not valid integers or if they are not between 3 and 50.
+        ValueError if WIDTH and HEIGHT are not valid integers
+        or if they are not between 3 and 50.
     """
     try:
         width: int = int(dict_config["WIDTH"])
@@ -96,8 +98,16 @@ def _check_dimensions(dict_config: dict[str, Any]) -> tuple[int, int]:
 
 
 def _check_perfect(dict_config: dict[str, Any]) -> None:
-    # checking that PERFECT only accepts "true" or
-    # "false" and make it a boolean
+    """
+    Checking that PERFECT accepts true or false and make it a boolean
+
+    Args:
+        dict_config: The dict we are trying to build
+        with parsed data from config.txt
+
+    Raises:
+        ValueError if <value> for PERFECT is anything else than true/false
+    """
     perfect: str = dict_config.get("PERFECT", "").lower()
     if perfect not in ("true", "false"):
         raise ValueError("Error: PERFECT must be 'True' or"
@@ -106,44 +116,88 @@ def _check_perfect(dict_config: dict[str, Any]) -> None:
 
 
 def _check_output_file(dict_config: dict[str, Any]) -> None:
-    # checking that the output file is a .txt
+    """
+    Making sure the output file is a .txt
+
+    Args:
+        dict_config: The dict we are trying to build
+        with parsed data from config.txt
+
+    Raises:
+        ValueError if <output_file> doesn't end with .txt
+    """
     output: str = dict_config["OUTPUT_FILE"]
     if not output.endswith(".txt"):
         raise ValueError("Error: <OUTPUT_FILE> should be a .txt")
     dict_config.update({"OUTPUT_FILE": output})
 
 
-def _check_entry_format(dict_config: dict[str, Any]) -> tuple[int, int]:
-    # checking that ENTRY has 2 valid integers
-    # and making them a tuple[int, int]
+def _check_entry_format(dict_config: dict[str, Any]) -> Tuple[int, int]:
+    """
+    Checking that ENTRY has 2 valid integers
+
+    Args:
+        dict_config: The dict we are trying to build
+        with parsed data from config.txt
+
+    Returns:
+        A Tuple holding ENTRY coordinates
+
+    Raises:
+        ValueError if <x,y> format is not respected
+        ValueError if ENTRY is not valid integers
+    """
     values = dict_config["ENTRY"].split(',', 1)
     if len(values) != 2:
         raise ValueError("Error: format for ENTRY must be <ENTRY=x, y>.")
     try:
-        entry_coords: tuple[int, int] = (int(values[0]), int(values[1]))
+        entry_coords: Tuple[int, int] = (int(values[0]), int(values[1]))
         dict_config.update({"ENTRY": entry_coords})
     except ValueError:
         raise ValueError("Error: Values for ENTRY must be valid integers.")
     return entry_coords
 
 
-def _check_exit_format(dict_config: dict[str, Any]) -> tuple[int, int]:
-    # checking that EXIT has 2 valid integers and making them a tuple[int, int]
+def _check_exit_format(dict_config: dict[str, Any]) -> Tuple[int, int]:
+    """
+    Checking that EXIT has 2 valid integers
+
+    Args:
+        dict_config: The dict we are trying to build
+        with parsed data from config.txt
+
+    Returns:
+        A Tuple holding EXIT coordinates
+
+    Raises:
+        ValueError if <x,y> format is not respected
+        ValueError if EXIT is not valid integers
+    """
     values = dict_config["EXIT"].split(',', 1)
     if len(values) != 2:
         raise ValueError("Error: format for EXIT must be <EXIT=x, y>.")
     try:
-        exit_coords: tuple[int, int] = (int(values[0]), int(values[1]))
+        exit_coords: Tuple[int, int] = (int(values[0]), int(values[1]))
         dict_config.update({"EXIT": exit_coords})
     except ValueError:
         raise ValueError("Error: Values for EXIT must be valid integers.")
     return exit_coords
 
 
-def _check_entry_exit_bound(width_height: tuple[int, int],
-                            entry_coords: tuple[int, int],
-                            exit_coords: tuple[int, int]) -> None:
-    # checking ENTRY and EXIT are within the grid
+def _check_entry_exit_bound(width_height: Tuple[int, int],
+                            entry_coords: Tuple[int, int],
+                            exit_coords: Tuple[int, int]) -> None:
+    """
+    Checking that ENTRY and EXIT are within the grid
+
+    Args:
+        width_height: previously generated Tuple with WIDTH and HEIGHT
+        entry_coords: ENTRY coordinates <x,y>
+        exit_coords: EXIT coordinates <x,y>
+
+    Raises:
+        ValueError if ENTRY or EXIT are set outside the grid
+    """
     if not (0 <= entry_coords[0] < width_height[0]) \
         or not (0 <= entry_coords[1] < width_height[1]) \
             or not (0 <= exit_coords[0] < width_height[0]) \
@@ -151,19 +205,29 @@ def _check_entry_exit_bound(width_height: tuple[int, int],
         raise ValueError("Error: ENTRY and EXIT must be within the grid.")
 
 
-def _check_entry_exit_equality(entry_coords: tuple[int, int],
-                               exit_coords: tuple[int, int]) -> None:
+def _check_entry_exit_equality(entry_coords: Tuple[int, int],
+                               exit_coords: Tuple[int, int]) -> None:
+    """
+    Making sure ENTRY and EXIT are different
+
+    Args:
+        entry_coords: ENTRY coordinates <x,y>
+        exit_coords: EXIT coordinates <x,y>
+
+    Raises:
+        ValueError if ENTRY and EXIT are the same
+    """
     if entry_coords == exit_coords:
         raise ValueError("Error: ENTRY and EXIT cannot be the same.")
 
 
 def _check_pattern_inclusion(dict_config: dict[str, Any]) -> str:
-    patterns: list[str] = ["PATTERN_PENGUIN",
+    patterns: List[str] = ["PATTERN_PENGUIN",
                            "PATTERN_HEART",
                            "PATTERN_CEL",
                            "PATTERN_MATT",
                            "PATTERN_SANS"]
-    true_keys: list[str] = [k for k in patterns
+    true_keys: List[str] = [k for k in patterns
                             if dict_config.get(k, "false").lower() == "true"]
     pattern: str = ""
     if len(true_keys) == 0 or len(true_keys) > 1:
@@ -175,9 +239,9 @@ def _check_pattern_inclusion(dict_config: dict[str, Any]) -> str:
     return pattern
 
 
-def _check_pattern_displayable(width_height: tuple[int, int],
-                               entry_coords: tuple[int, int],
-                               exit_coords: tuple[int, int],
+def _check_pattern_displayable(width_height: Tuple[int, int],
+                               entry_coords: Tuple[int, int],
+                               exit_coords: Tuple[int, int],
                                pattern: str) -> None:
     if width_height[1] < MIN_DISPLAY_SIZE \
        or width_height[0] < MIN_DISPLAY_SIZE:
@@ -186,7 +250,7 @@ def _check_pattern_displayable(width_height: tuple[int, int],
     else:
         # making sure that ENTRY and EXIT are not
         # where the 42 pattern is going to be
-        pattern_matrix: list[list[int]] = get_pattern_by_name(pattern)
+        pattern_matrix: List[List[int]] = get_pattern_by_name(pattern)
         pattern_h: int = len(pattern_matrix)
         pattern_w: int = len(pattern_matrix[0])
         coords: dict[str, int] = \
@@ -205,11 +269,11 @@ def _check_pattern_displayable(width_height: tuple[int, int],
 
 
 def check_values(dict_config: dict[str, Any]) -> None:
-    width_height: tuple[int, int] = _check_dimensions(dict_config)
+    width_height: Tuple[int, int] = _check_dimensions(dict_config)
     _check_perfect(dict_config)
     _check_output_file(dict_config)
-    entry_coords: tuple[int, int] = _check_entry_format(dict_config)
-    exit_coords: tuple[int, int] = _check_exit_format(dict_config)
+    entry_coords: Tuple[int, int] = _check_entry_format(dict_config)
+    exit_coords: Tuple[int, int] = _check_exit_format(dict_config)
     _check_entry_exit_bound(width_height, entry_coords, exit_coords)
     _check_entry_exit_equality(entry_coords, exit_coords)
     pattern: str = _check_pattern_inclusion(dict_config)
