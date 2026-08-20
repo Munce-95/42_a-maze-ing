@@ -1,6 +1,6 @@
 import sys
 import os
-from typing import Any, Tuple, List
+from typing import Any, Tuple, List, Dict
 from utils_files import (nonblank_lines,
                          get_coords_pattern,
                          Data,
@@ -28,7 +28,7 @@ def check_args() -> None:
         raise IsADirectoryError(f"Error: '{sys.argv[1]}' is a directory.")
 
 
-def retrieve_raw_data(config_file: str) -> dict[str, Any]:
+def retrieve_raw_data(config_file: str) -> Dict[str, Any]:
     """
     Retrieving data from <config_file> provided by user (argv[1])
 
@@ -44,7 +44,7 @@ def retrieve_raw_data(config_file: str) -> dict[str, Any]:
         ValueError if <config_file> is not valid text
         PermissionError if <config_file> doesn't have the proper permission
     """
-    raw_config: dict[str, Any] = {}
+    raw_config: Dict[str, Any] = {}
     try:
         with open(config_file) as f:
             for line in nonblank_lines(f):
@@ -68,7 +68,7 @@ def retrieve_raw_data(config_file: str) -> dict[str, Any]:
     return raw_config
 
 
-def check_raw_data(raw_config: dict[str, Any]) -> None:
+def check_raw_data(raw_config: Dict[str, Any]) -> None:
     """
     Checking the data prior any mutation
 
@@ -97,7 +97,7 @@ def check_raw_data(raw_config: dict[str, Any]) -> None:
             raise KeyError("Error: one or more mandatory key(s) missing.")
 
 
-def _check_dimensions(dict_config: dict[str, Any]) -> Tuple[int, int]:
+def _check_dimensions(dict_config: Dict[str, Any]) -> Tuple[int, int]:
     """
     Checking that WIDTH and HEIGHT are valid integers.
 
@@ -125,7 +125,7 @@ def _check_dimensions(dict_config: dict[str, Any]) -> Tuple[int, int]:
     return (dict_config["WIDTH"], dict_config["HEIGHT"])
 
 
-def _check_perfect(dict_config: dict[str, Any]) -> None:
+def _check_perfect(dict_config: Dict[str, Any]) -> None:
     """
     Checking that PERFECT accepts true or false and make it a boolean
 
@@ -142,7 +142,7 @@ def _check_perfect(dict_config: dict[str, Any]) -> None:
     dict_config["PERFECT"] = perfect == "true"
 
 
-def _check_output_file(dict_config: dict[str, Any]) -> None:
+def _check_output_file(dict_config: Dict[str, Any]) -> None:
     """
     Making sure the output file is a .txt
 
@@ -158,7 +158,7 @@ def _check_output_file(dict_config: dict[str, Any]) -> None:
     dict_config.update({"OUTPUT_FILE": output})
 
 
-def _check_entry_format(dict_config: dict[str, Any]) -> Tuple[int, int]:
+def _check_entry_format(dict_config: Dict[str, Any]) -> Tuple[int, int]:
     """
     Checking that ENTRY has 2 valid integers
 
@@ -183,7 +183,7 @@ def _check_entry_format(dict_config: dict[str, Any]) -> Tuple[int, int]:
     return entry_coords
 
 
-def _check_exit_format(dict_config: dict[str, Any]) -> Tuple[int, int]:
+def _check_exit_format(dict_config: Dict[str, Any]) -> Tuple[int, int]:
     """
     Checking that EXIT has 2 valid integers
 
@@ -245,7 +245,7 @@ def _check_entry_exit_equality(entry_coords: Tuple[int, int],
         raise ValueError("Error: ENTRY and EXIT cannot be the same.")
 
 
-def _check_pattern_inclusion(dict_config: dict[str, Any]) -> str:
+def _check_pattern_inclusion(dict_config: Dict[str, Any]) -> str:
     """
     Check if a specific pattern has been selected in <config_file>
 
@@ -297,7 +297,7 @@ def _check_pattern_displayable(width_height: Tuple[int, int],
         pattern_matrix: List[List[int]] = get_pattern_by_name(pattern)
         pattern_h: int = len(pattern_matrix)
         pattern_w: int = len(pattern_matrix[0])
-        coords: dict[str, int] = \
+        coords: Dict[str, int] = \
             get_coords_pattern(width_height[1],
                                width_height[0],
                                pattern_h,
@@ -312,7 +312,7 @@ def _check_pattern_displayable(width_height: Tuple[int, int],
                              f" and ({coords['end_x']}, {coords['end_y']})")
 
 
-def check_values(dict_config: dict[str, Any]) -> None:
+def check_values(dict_config: Dict[str, Any]) -> None:
     """
     Orchestrator for the whole parsing
 
@@ -331,7 +331,7 @@ def check_values(dict_config: dict[str, Any]) -> None:
                                entry_coords, exit_coords, pattern)
 
 
-def get_parsed_values(dict_config: dict[str, Any]) -> Data:
+def get_parsed_values(dict_config: Dict[str, Any]) -> Data:
     """
     Retrieving parsed values from dict and constructing an instance of Data
 
