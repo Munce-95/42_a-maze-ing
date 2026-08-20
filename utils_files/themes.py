@@ -1,5 +1,4 @@
 from typing import NamedTuple, List
-import random
 
 BG_CORE = "\033[48;2;255;255;255m"
 

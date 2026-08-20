@@ -273,7 +273,7 @@ def run_session(parsed: NamedTuple, new_gen: Tuple[List[List[str]], int, int, bo
             elif choice == "q":
                 sys.exit(0)
             else:
-                print("Warning: learn to read options. Try again.", file=sys.stderr)
+                continue
             temp: List[str] = bg_list.copy()
             if not show_path:
                 temp[4] = temp[3]
