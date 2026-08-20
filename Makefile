@@ -39,7 +39,11 @@ lint-strict:
 	$(MPS)
 
 install:
-	@echo "No requirements to install"
+	python3 -m venv maze_venv
+	maze_venv/bin/pip install build
+
+build:
+	maze_venv/bin/python3 -m build mazegen
 
 clean:
 	@echo "Cleaning temporary files..."
