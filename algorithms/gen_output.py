@@ -19,7 +19,8 @@ def _hex_conversion(cell: Cell) -> str:
     value: int = 0
     if cell.walls['N']:
         value |= (1 << 0)
-    if cell.walls['E']:9
+    if cell.walls['E']:
+        value |= (1 << 1)
     if cell.walls['S']:
         value |= (1 << 2)
     if cell.walls['W']:
@@ -57,7 +58,8 @@ def write_output_file(output_file: str,
                       maze: List[List[Cell]],
                       path: List[Cell]) -> None:
     """
-    Creates and writes inside the output_file: the matrix translated into hexadecimal,
+    Creates and writes inside the output_file:
+    the matrix translated into hexadecimal,
     entry and exit coordinates, the path towards the exit.
 
     Args:
