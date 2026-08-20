@@ -12,7 +12,7 @@ MIN_DISPLAY_SIZE = 10
 
 def check_args() -> None:
     """
-    Checking if one argument is present and if the file passed as argv[1] exists
+    Is there only one argument? Does the file passed as argv[1] exist?
 
     Raises:
         ValueError: if the number of arguments is different than 2
@@ -278,7 +278,7 @@ def _check_pattern_displayable(width_height: Tuple[int, int],
                                exit_coords: Tuple[int, int],
                                pattern: str) -> None:
     """
-    Checking if the pattern is displayable and that both ENTRY and EXIT are not inside it
+    Is pattern displayable? Are both ENTRY and EXIT outside pattern?
 
     Args:
         width_height: previously generated Tuple with WIDTH and HEIGHT
@@ -333,7 +333,7 @@ def check_values(dict_config: dict[str, Any]) -> None:
 
 def get_parsed_values(dict_config: dict[str, Any]) -> Data:
     """
-    Retrieving all the parsed values from the dict and constructing and instance of Data
+    Retrieving parsed values from dict and constructing and instance of Data
 
     Args:
         dict_config: The config data being validated
