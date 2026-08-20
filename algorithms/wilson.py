@@ -190,9 +190,9 @@ def _merge_sans_blocks(
                     char = "W"
                 else:
                     if cell.sans_eye:
-                        char = "Y"
+                        char = "I"
                     else:
-                        char = "O"
+                        char = "C"
                 output_grid[ry][rx] = char
                 output_grid[ry][rx + 1] = char
                 output_grid[ry + 1][rx] = char
@@ -223,8 +223,8 @@ def render_terminal_blocks(
     """This function is the one who is rendering the maze using ANSI code,
     with the color palette selected in the 'themes.py' file
     W: Wall
-    B: Blocked (Border of the pattern)
-    C: Core (The color of the pattern)
+    B: Blocked (Primary color of the pattern)
+    C: Core (Secondary color of the pattern)
     I: Eye (Used exclusivly for the sans. pattern)
     .: The shortest path from entry to exit
     M: The entry of the maze
