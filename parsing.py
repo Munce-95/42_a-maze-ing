@@ -12,7 +12,12 @@ MIN_DISPLAY_SIZE = 10
 
 def check_args() -> None:
     """
-    Checking if one argument is present and if the file passed as arg exists.
+    Checking if one argument is present and if the file passed as argv[1] exists
+
+    Raises:
+        ValueError: if the number of arguments is different than 2
+        FileNotFoundError if the provided <config_file> doesn't exist
+        IsADirectoryError if <config_file> is a directory
     """
     if len(sys.argv) != 2:
         raise ValueError("Error: there must be only one argument!\n"
@@ -24,6 +29,21 @@ def check_args() -> None:
 
 
 def retrieve_raw_data(config_file: str) -> dict[str, Any]:
+    """
+    Retrieving data from <config_file> provided by user (argv[1])
+
+    Args:
+        config_file: file provided with argv[1]
+
+    Returns:
+        A dict with the retrieved data from <config_file>
+
+    Raises:
+        KeyError if a key starts with a space
+        ValueError if there is more than one key/value pair per line
+        ValueError if <config_file> is not valid text
+        PermissionError if <config_file> doesn't have the proper permission
+    """
     raw_config: dict[str, Any] = {}
     try:
         with open(config_file) as f:
@@ -49,18 +69,27 @@ def retrieve_raw_data(config_file: str) -> dict[str, Any]:
 
 
 def check_raw_data(raw_config: dict[str, Any]) -> None:
+    """
+    Checking the data prior any mutation
+
+    Args:
+        raw_config: a dict made out of the data from <config_file>
+
+    Raises:
+        ValueError if at least 6 keys are not present
+        KeyError if keys are commented or not written using letters/underscores
+        KeyError if one of the mandatory keys is missing
+    """
     if len(raw_config) < 6:
         raise ValueError("Error: there must be at least 6 keys"
                          " in the <config_file>.")
 
-    # checking that keys are only composed of letters or underscores
     for key in raw_config.keys():
         for c in key:
             if not (c.isalpha() or c == '_'):
                 raise KeyError("Error: Keys must be written using"
                                " letters and not be commented.")
 
-    # checking mandatory keys are in <config_file>
     mandatory_keys: List[str] = \
         ["WIDTH", "HEIGHT", "ENTRY", "EXIT", "OUTPUT_FILE", "PERFECT"]
     for key in mandatory_keys:
@@ -73,8 +102,7 @@ def _check_dimensions(dict_config: dict[str, Any]) -> Tuple[int, int]:
     Checking that WIDTH and HEIGHT are valid integers.
 
     Args:
-        dict_config: The dict we are trying to build
-        with parsed data from config.txt
+        dict_config: The config data being validated
 
     Returns:
         A tuple holding our WIDTH and HEIGHT
@@ -102,8 +130,7 @@ def _check_perfect(dict_config: dict[str, Any]) -> None:
     Checking that PERFECT accepts true or false and make it a boolean
 
     Args:
-        dict_config: The dict we are trying to build
-        with parsed data from config.txt
+        dict_config: The config data being validated
 
     Raises:
         ValueError if <value> for PERFECT is anything else than true/false
@@ -120,8 +147,7 @@ def _check_output_file(dict_config: dict[str, Any]) -> None:
     Making sure the output file is a .txt
 
     Args:
-        dict_config: The dict we are trying to build
-        with parsed data from config.txt
+        dict_config: The config data being validated
 
     Raises:
         ValueError if <output_file> doesn't end with .txt
@@ -137,8 +163,7 @@ def _check_entry_format(dict_config: dict[str, Any]) -> Tuple[int, int]:
     Checking that ENTRY has 2 valid integers
 
     Args:
-        dict_config: The dict we are trying to build
-        with parsed data from config.txt
+        dict_config: The config data being validated
 
     Returns:
         A Tuple holding ENTRY coordinates
@@ -163,8 +188,7 @@ def _check_exit_format(dict_config: dict[str, Any]) -> Tuple[int, int]:
     Checking that EXIT has 2 valid integers
 
     Args:
-        dict_config: The dict we are trying to build
-        with parsed data from config.txt
+        dict_config: The config data being validated
 
     Returns:
         A Tuple holding EXIT coordinates
@@ -222,6 +246,16 @@ def _check_entry_exit_equality(entry_coords: Tuple[int, int],
 
 
 def _check_pattern_inclusion(dict_config: dict[str, Any]) -> str:
+    """
+    Check if a specific pattern has been selected in <config_file>
+
+    Args:
+        dict_config: The config data being validated
+
+    Returns:
+        The name of the selected pattern (defaults to 42
+        if none is selected or if more than one is True)
+    """
     patterns: List[str] = ["PATTERN_PENGUIN",
                            "PATTERN_HEART",
                            "PATTERN_CEL",
@@ -243,13 +277,23 @@ def _check_pattern_displayable(width_height: Tuple[int, int],
                                entry_coords: Tuple[int, int],
                                exit_coords: Tuple[int, int],
                                pattern: str) -> None:
+    """
+    Checking if the pattern is displayable and that both ENTRY and EXIT are not inside it
+
+    Args:
+        width_height: previously generated Tuple with WIDTH and HEIGHT
+        entry_coords: ENTRY coordinates <x,y>
+        exit_coords: EXIT coordinates <x,y>
+        pattern: previously selected pattern (or 42 by default)
+
+    Raises:
+        ValueError if ENTRY or EXIT are inside the pattern
+    """
     if width_height[1] < MIN_DISPLAY_SIZE \
        or width_height[0] < MIN_DISPLAY_SIZE:
         print("Warning: the grid is too small to display the pattern",
               file=sys.stderr)
     else:
-        # making sure that ENTRY and EXIT are not
-        # where the 42 pattern is going to be
         pattern_matrix: List[List[int]] = get_pattern_by_name(pattern)
         pattern_h: int = len(pattern_matrix)
         pattern_w: int = len(pattern_matrix[0])
@@ -269,6 +313,12 @@ def _check_pattern_displayable(width_height: Tuple[int, int],
 
 
 def check_values(dict_config: dict[str, Any]) -> None:
+    """
+    Orchestrator for the whole parsing
+
+    Args:
+        dict_config: The config data being validated
+    """
     width_height: Tuple[int, int] = _check_dimensions(dict_config)
     _check_perfect(dict_config)
     _check_output_file(dict_config)
@@ -282,6 +332,15 @@ def check_values(dict_config: dict[str, Any]) -> None:
 
 
 def get_parsed_values(dict_config: dict[str, Any]) -> Data:
+    """
+    Retrieving all the parsed values from the dict and constructing and instance of Data
+
+    Args:
+        dict_config: The config data being validated
+
+    Returns:
+        Data Class which takes a NamedTuple
+    """
     parsed_values = Data(dict_config["WIDTH"],
                          dict_config["HEIGHT"],
                          dict_config["ENTRY"],
