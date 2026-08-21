@@ -1,5 +1,6 @@
-from typing import Tuple, List, NamedTuple
+from typing import List
 from utils_files.cell import Cell
+from utils_files.data import Data
 
 
 def _hex_conversion(cell: Cell) -> str:
@@ -52,7 +53,7 @@ def _direction(cell_a: Cell, cell_b: Cell) -> str:
     raise ValueError("Error: path cells are not adjacent.")
 
 
-def write_output_file(parsed: NamedTuple,
+def write_output_file(parsed: Data,
                       maze: List[List[Cell]],
                       path: List[Cell]) -> None:
     """

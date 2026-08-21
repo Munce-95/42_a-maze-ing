@@ -160,7 +160,8 @@ def generate_wilson(parsed: Data) -> Tuple[List[List[Cell]], bool, list[str]]:
     Return:
         The list that represent the maze
     """
-    grid = [[Cell(x, y) for y in range(parsed.height)] for x in range(parsed.width)]
+    grid = [[Cell(x, y) for y in range(parsed.height)]
+            for x in range(parsed.width)]
     is_sans, bg_list = apply_pattern(grid, parsed)
     unvisited = [
         grid[x][y] for x in range(parsed.width)
@@ -347,7 +348,11 @@ def run_session(parsed: Data, new_gen: Tuple[List[List[str]],
         exit_program("Exiting program properly.")
 
 
-def wilson_main(parsed: Data) -> Tuple[List[List[str]], int, int, bool, List[str]]:
+def wilson_main(parsed: Data) -> Tuple[List[List[str]],
+                                       int,
+                                       int,
+                                       bool,
+                                       List[str]]:
     maze, is_sans, bg_list = generate_wilson(parsed)
     matrix, r_w, r_h = build_matrix_1x1(maze, parsed, is_sans=is_sans)
     path = solve_dijkstra(maze, parsed)

@@ -37,11 +37,11 @@ def solve_dijkstra(
         parsed: Data) -> List[Cell]:
     """
     Calulate the shortest path from entry to exit
-    
+
     Args:
         cell: the cell whose walls are being encoded
         parsed: All the parsed data from the config.txt file
-    
+
     Return:
         The shortest path from entry to exit
     """
@@ -83,7 +83,7 @@ def mark_path_in_matrix(
         parsed: Data) -> None:
     """
     Change the spaces in the maze by dot or entry / exit characters
-    
+
     Args:
         matrix: The matrix of the maze that will be change with the path
         path: The shortest path determinated by solve_dijkstra()
