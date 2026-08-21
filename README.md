@@ -132,7 +132,9 @@ TODO.
 
 ### Anticipated planning and how it evolved
 
-TODO.
+On the "42" pattern in mazegen
+
+The subject's mandatory maze requirements (Chapter IV) call for a visible "42" pattern drawn by closed cells. However, the reusable MazeGenerator module (Chapter VI) is deliberately built without this pattern. The subject frames Chapter VI's reusability requirement around a maze generator that later projects can build on — and a hardcoded "42" logo has no reason to appear in an unrelated project reusing this module. We treat the "42" pattern as specific to a_maze_ing.py's own output, not as a property the generic, reusable generator itself needs to guarantee. MazeGenerator produces a plain, loopy (Pac-Man-style) maze with no pattern baked in.
 
 ### What worked well and what could be improved
 
