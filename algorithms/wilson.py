@@ -55,7 +55,7 @@ def remove_wall(
 
 def non_perfect(
         grid: List[List[Cell]],
-        parsed: NamedTuple,
+        parsed: Data,
         ratio: float = 0.15) -> None:
     """
     This function break random wall in the maze already generated
@@ -90,7 +90,7 @@ def non_perfect(
 
 def apply_pattern(
         grid: List[List[Cell]],
-        parsed: NamedTuple,
+        parsed: Data,
         pattern: str) -> Tuple[bool, List[str]]:
     """
     This function will pregenerate the pattern within the maze's edge
@@ -129,7 +129,7 @@ def apply_pattern(
 def get_unblocked_neighbors(
         grid: List[List[Cell]],
         cell: Cell,
-        parsed: NamedTuple) -> List[Cell]:
+        parsed: Data) -> List[Cell]:
     """
     Get the whole list of the available cell to move in
 
@@ -152,21 +152,18 @@ def get_unblocked_neighbors(
     return neighbors
 
 
-def generate_wilson(
-        pattern: str,
-        parsed: Data) -> Tuple[List[List[Cell]], bool, list[str]]:
+def generate_wilson(parsed: Data) -> Tuple[List[List[Cell]], bool, list[str]]:
     """
     Generate the whole maze using the Wilson's Algorithm
 
     Args:
         parsed: All the parsed data from the config.txt file
-        pattern: The pattern's name created in the pattern.py file
 
     Return:
         The list that represent the maze
     """
     grid = [[Cell(x, y) for y in range(parsed.height)] for x in range(parsed.width)]
-    is_sans, bg_list = apply_pattern(grid, parsed.width, parsed.height, pattern)
+    is_sans, bg_list = apply_pattern(grid, parsed.width, parsed.height, parsed.pattern)
     unvisited = [
         grid[x][y] for x in range(parsed.width)
         for y in range(parsed.height)
@@ -196,7 +193,7 @@ def generate_wilson(
 
 def build_matrix_1x1(
         grid: List[List[Cell]],
-        parsed: NamedTuple,
+        parsed: Data,
         is_sans: bool = False) -> Tuple[List[List[str]], int, int]:
     """
     This function build the maze matrix with characters
@@ -239,7 +236,7 @@ def build_matrix_1x1(
 def _merge_sans_blocks(
         grid: List[List[Cell]],
         maze_matrix: List[List[str]],
-        parsed: NamedTuple,) -> None:
+        parsed: Data,) -> None:
     """
     Special fuction that merge the walls inside of the sans. pattern
 
@@ -352,8 +349,8 @@ def run_session(parsed: Data, new_gen: Tuple[List[List[str]],
         exit_program("Exiting program properly.")
 
 
-def wilson_main(parsed: NamedTuple) -> Tuple[List[List[str]], int, int, bool, List[str]]:
-    maze, is_sans, bg_list = generate_wilson(pattern, parsed)
+def wilson_main(parsed: Data) -> Tuple[List[List[str]], int, int, bool, List[str]]:
+    maze, is_sans, bg_list = generate_wilson(parsed)
     matrix, r_w, r_h = build_matrix_1x1(maze, parsed, is_sans=is_sans)
     path = solve_dijkstra(maze, parsed)
     mark_path_in_matrix(matrix, path, parsed)
