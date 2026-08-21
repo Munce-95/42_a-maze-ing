@@ -76,7 +76,8 @@ THEMES = [
 ]
 
 
-def get_bg_list_for_pattern(is_sans_pattern: bool, theme_index: int = 0) -> List[str]:
+def get_bg_list_for_pattern(is_sans_pattern: bool,
+                            theme_index: int = 0) -> List[str]:
     """
     Builds the list of ANSI colours used to render one maze frame
 

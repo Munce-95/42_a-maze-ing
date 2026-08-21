@@ -23,7 +23,11 @@ def main() -> None:
     parsed: Data = get_parsed_values(retrieved_data)
 
     # CEL PART :
-    new_gen: Tuple[List[List[str]], int, int, bool, List[str]] = wilson_main(parsed)
+    new_gen: Tuple[List[List[str]],
+                   int,
+                   int,
+                   bool,
+                   List[str]] = wilson_main(parsed)
     run_session(parsed, new_gen)
 
 

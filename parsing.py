@@ -26,6 +26,8 @@ def check_args() -> None:
         raise FileNotFoundError(f"Error: file '{sys.argv[1]}' does not exist.")
     if not os.path.isfile(sys.argv[1]):
         raise IsADirectoryError(f"Error: '{sys.argv[1]}' is a directory.")
+    if sys.argv[1] != "config.txt":
+        raise ValueError("Error: the argument must be 'config.txt'")
 
 
 def retrieve_raw_data(config_file: str) -> Dict[str, Any]:

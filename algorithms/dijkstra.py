@@ -1,6 +1,7 @@
 import heapq
-from typing import Dict, List, NamedTuple, Tuple
+from typing import List
 from utils_files.cell import Cell
+from utils_files.data import Data
 
 
 def get_dijkstra_neighbors(
@@ -79,18 +80,9 @@ def solve_dijkstra(
 def mark_path_in_matrix(
         matrix: List[List[str]],
         path: List[Cell],
-        parsed: NamedTuple) -> None:
-    """
-	Change the spaces in the maze by dot or entry / exit characters
-	
-	Args:
-		matrix: The matrix of the maze that will be change with the path
-		path: The shortest path determinated by solve_dijkstra()
-		parsed: All the parsed data from the config.txt file
-	"""
-    if not path:
-        return
-    for cell in path:
+        parsed: Data) -> None:
+    for i in range(len(path)):
+        cell = path[i]
         rx, ry = cell.x * 2 + 1, cell.y * 2 + 1
         matrix[ry][rx] = "."
     for curr, nxt in zip(path, path[1:]):

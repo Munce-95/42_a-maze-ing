@@ -2,9 +2,10 @@ import random
 import sys
 import subprocess
 from errors import exit_program
-from typing import List, Tuple, Dict, NamedTuple
+from typing import List, Tuple, Dict
 from utils_files.pattern import PATTERN_SANS, get_pattern_by_name
 from utils_files.themes import get_bg_list_for_pattern
+from utils_files.data import Data
 from algorithms.dijkstra import solve_dijkstra, mark_path_in_matrix
 from algorithms.gen_output import write_output_file
 from utils_files.cell import Cell
@@ -90,7 +91,7 @@ def non_perfect(
 def apply_pattern(
         grid: List[List[Cell]],
         parsed: NamedTuple,
-        pattern: str) -> bool:
+        pattern: str) -> Tuple[bool, List[str]]:
     """
     This function will pregenerate the pattern within the maze's edge
 
@@ -153,7 +154,7 @@ def get_unblocked_neighbors(
 
 def generate_wilson(
         pattern: str,
-        parsed: NamedTuple) -> List[List[Cell]]:
+        parsed: Data) -> Tuple[List[List[Cell]], bool, list[str]]:
     """
     Generate the whole maze using the Wilson's Algorithm
 
@@ -315,9 +316,11 @@ def render_terminal_blocks(
         print(line)
 
 
-def run_session(
-        parsed: NamedTuple,
-        new_gen: Tuple[List[List[str]], int, int, bool, List[str]]) -> None:
+def run_session(parsed: Data, new_gen: Tuple[List[List[str]],
+                                             int,
+                                             int,
+                                             bool,
+                                             List[str]]) -> None:
     matrix, r_w, r_h, is_sans, bg_list = new_gen
     theme_index: int = 0
     show_path: bool = True
@@ -355,5 +358,9 @@ def wilson_main(parsed: NamedTuple) -> Tuple[List[List[str]], int, int, bool, Li
     path = solve_dijkstra(maze, parsed)
     mark_path_in_matrix(matrix, path, parsed)
     render_terminal_blocks(matrix, r_w, r_h, bg_list)
-    write_output_file(parsed.output_file, parsed.entry, parsed.exit_, maze, path)
+    write_output_file(parsed.output_file,
+                      parsed.entry,
+                      parsed.exit_,
+                      maze,
+                      path)
     return matrix, r_w, r_h, is_sans, bg_list

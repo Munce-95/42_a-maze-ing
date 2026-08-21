@@ -3,7 +3,7 @@ from utils_files.cell import Cell
 
 
 def _hex_conversion(cell: Cell) -> str:
-	"""
+    """
     Encodes a cell's four walls as a single hexadecimal digit
 
     Each wall contributes one bit if closed (0=open): North is bit 0,
@@ -61,11 +61,13 @@ def write_output_file(parsed: NamedTuple,
     entry and exit coordinates, the path towards the exit.
 
     Args:
-        parsed: All the parsed data from the config.txt file
+        output_file: name given at parsing, the file doesn't exist at first
+        entry_coords: ENTRY coordinates
+        exit_coords: EXIT coordinates
         maze: matrix used to be translates into hexa
         path: path from ENTRY to EXIT
     """
-	width: int = len(maze)
+    width: int = len(maze)
     height: int = len(maze[0])
     with open(parsed.output_file, "w") as f:
         for y in range(height):
