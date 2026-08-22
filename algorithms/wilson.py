@@ -40,48 +40,6 @@ def remove_wall(
     """
     dx = cell2.x - cell1.x
     dy = cell2.y - cell1.y
-    if dx == 1:import random
-import sys
-import subprocess
-import signal
-from errors import exit_program
-from typing import List, Tuple, Dict
-from utils_files.pattern import PATTERN_SANS, get_pattern_by_name
-from utils_files.themes import get_bg_list_for_pattern
-from utils_files.data import Data
-from algorithms.dijkstra import solve_dijkstra, mark_path_in_matrix
-from algorithms.gen_output import write_output_file
-from utils_files.cell import Cell
-
-
-current_bg_list: List[str] = []
-
-
-def is_obstacle(cell: Cell) -> bool:
-    """
-    Check if the cell is part of the symbol or a wall
-
-    Args:
-        cell: the cell whose walls are being encoded
-
-    Return:
-        True or False if the cell has to be considered as an obstacle
-    """
-    return cell.is_blocked or cell.in_symbol or cell.sans_eye
-
-
-def remove_wall(
-        cell1: Cell,
-        cell2: Cell) -> None:
-    """
-    This function is used to remove a wall between two cells
-
-    Args:
-        cell1: The starting cell
-        cell2: The adjacent cell
-    """
-    dx = cell2.x - cell1.x
-    dy = cell2.y - cell1.y
     if dx == 1:
         cell1.walls['E'] = False
         cell2.walls['W'] = False
@@ -123,13 +81,14 @@ def non_perfect(
                     continue
                 for dx, dy in directions:
                     nx, ny = cell.x + dx, cell.y + dy
-                    if not (0 <= nx < parsed.width and 0 <= ny < parsed.height):
+                    if not (0 <= nx < parsed.width
+                            and 0 <= ny < parsed.height):
                         continue
                     neighbor = grid[nx][ny]
                     if is_obstacle(neighbor):
                         continue
                     wall_dir = {(0, -1): 'N', (1, 0): 'E',
-                               (0, 1): 'S', (-1, 0): 'W'}[(dx, dy)]
+                                (0, 1): 'S', (-1, 0): 'W'}[(dx, dy)]
                     if not cell.walls[wall_dir]:
                         continue
                     remove_wall(cell, neighbor)
