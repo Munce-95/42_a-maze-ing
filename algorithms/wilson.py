@@ -312,6 +312,7 @@ def render_terminal_blocks(
         )
         print(line)
 
+
 def handle_sigquit(sign, frame) -> None:
     raise SystemExit(0)
 

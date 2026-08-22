@@ -14,8 +14,10 @@ class MazeGenerator:
         self.height = height
         self.seed = seed
         self._rng = random.Random(seed)
+        self.pat_42 = False
         self._apply_pattern()
-
+        self._generate_wilson()
+        self._add_loops()
 
     def _apply_pattern(self) -> None:
         if self.height < MIN_DISPLAY_SIZE or self.width < MIN_DISPLAY_SIZE:

@@ -10,4 +10,4 @@ def exit_program(error_message: str) -> NoReturn:
         error_message: message to be printed
     """
     print(error_message)
-    sys.exit(1)
+    sys.exit(0)
