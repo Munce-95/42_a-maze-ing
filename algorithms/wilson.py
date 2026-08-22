@@ -1,6 +1,7 @@
 import random
 import sys
 import subprocess
+import signal
 from errors import exit_program
 from typing import List, Tuple, Dict
 from utils_files.pattern import PATTERN_SANS, get_pattern_by_name
@@ -311,12 +312,16 @@ def render_terminal_blocks(
         )
         print(line)
 
+def handle_sigquit(sign, frame) -> None:
+    raise SystemExit(0)
+
 
 def run_session(parsed: Data, new_gen: Tuple[List[List[str]],
                                              int,
                                              int,
                                              bool,
                                              List[str]]) -> None:
+    signal.signal(signal.SIGQUIT, handle_sigquit)
     matrix, r_w, r_h, is_sans, bg_list = new_gen
     theme_index: int = 0
     show_path: bool = True
@@ -344,7 +349,7 @@ def run_session(parsed: Data, new_gen: Tuple[List[List[str]],
                 temp[4] = temp[3]
             subprocess.run("clear")
             render_terminal_blocks(matrix, r_w, r_h, temp)
-    except (EOFError, KeyboardInterrupt):
+    except (EOFError, KeyboardInterrupt, SystemExit):
         exit_program("Exiting program properly.")
 
 
