@@ -1,4 +1,5 @@
 from .cell import Cell
+from typing import List
 
 
 def remove_wall(cell1: Cell,
@@ -24,3 +25,10 @@ def remove_wall(cell1: Cell,
     elif dy == -1:
         cell1.walls['N'] = False
         cell2.walls['S'] = False
+
+
+def get_unblocked_neighbour(grid: List[List[Cell]],
+                            cell: Cell,
+                            height: int,
+                            width: int) -> List[Cell]:
+    

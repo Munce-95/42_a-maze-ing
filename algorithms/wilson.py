@@ -57,7 +57,7 @@ def remove_wall(
 def non_perfect(
         grid: List[List[Cell]],
         parsed: Data,
-        ratio: float = 0.15) -> None:
+        ratio: float = 0.5) -> None:
     """
     This function break random wall in the maze already generated
     to make it 'non-perfect'
