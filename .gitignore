@@ -10,10 +10,4 @@ test*
 .build-venv/
 dist/
 build/
-*.egg-info/.pre-commit-config.yaml
-__pycache__/
-*.pyc
-venv/
-output_file.txt
-test*
-.vscode
+*.egg-info/
