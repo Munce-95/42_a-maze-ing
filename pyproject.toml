@@ -1,15 +1,18 @@
 [build-system]
-requires = ["setuptools>61"]
+requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
-
-[tool.setuptools]
-packages = ["mazegen"]
 
 [project]
 name = "mazegen"
 version = "1.42"
-requires-python = ">= 3.10"
+description = "A self-contained, seed-reproducible maze generator (Wilson's algorithm) producing Pac-Man-style loopy mazes with a visible 42 pattern."
+readme = "mazegen/README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE.md" }
 authors = [
     { name = "celgremy" },
     { name = "mgedeon" },
 ]
+
+[tool.setuptools]
+packages = ["mazegen"]
