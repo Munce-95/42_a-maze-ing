@@ -9,3 +9,7 @@ packages = ["mazegen"]
 name = "mazegen"
 version = "1.42"
 requires-python = ">= 3.10"
+authors = [
+    { name = "celgremy" },
+    { name = "mgedeon" },
+]
