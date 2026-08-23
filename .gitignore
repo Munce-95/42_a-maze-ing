@@ -5,3 +5,9 @@ venv/
 output_file.txt
 test*
 .vscode
+.mypy_cache/
+.pytest_cache/
+.build-venv/
+dist/
+build/
+*.egg-info/
