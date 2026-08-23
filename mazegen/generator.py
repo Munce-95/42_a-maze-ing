@@ -1,5 +1,5 @@
 import random
-from typing import List
+import sys
 from .cell import Cell
 from .algorithm import generate_wilson, non_perfect
 
@@ -17,6 +17,23 @@ PATTERN_42 = [
 
 
 class MazeGenerator:
+    """
+    Generates a Pac-Man-style maze: fully connected, always contains
+    at least two independent loops (never a single-path/"perfect"
+    maze), and includes a visible "42" pattern when the grid is
+    large enough.
+
+    Basic usage:
+        gen = MazeGenerator(width=20, height=15, seed=42)
+        gen.grid            # list[list[Cell]], gen.grid[x][y]
+        gen.pat_42           # True if the 42 pattern was drawn
+        gen.solve((0, 0), (19, 14))  # shortest path as a list of Cell
+
+    Args:
+        width: maze width in cells.
+        height: maze height in cells.
+        seed: seed for reproducible generation (default 42).
+    """
     def __init__(
             self,
             width: int,
@@ -35,6 +52,12 @@ class MazeGenerator:
 
 
     def _apply_pattern(self) -> None:
+        """
+        Draws the "42" pattern centered in the grid, marking the
+        relevant cells is_blocked. Skips drawing (setting pat_42 to
+        False and printing a warning) if the grid is smaller than
+        MIN_DISPLAY_SIZE in either dimension.
+        """
         if self.height < MIN_DISPLAY_SIZE or self.width < MIN_DISPLAY_SIZE:
             self.pat_42 = False
             print("Warning: the grid is too small to display the pattern",
