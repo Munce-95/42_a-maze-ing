@@ -3,7 +3,7 @@ import sys
 import subprocess
 import signal
 from errors import exit_program
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Any
 from utils_files.pattern import PATTERN_SANS, get_pattern_by_name
 from utils_files.themes import get_bg_list_for_pattern
 from utils_files.data import Data
@@ -320,7 +320,7 @@ def render_terminal_blocks(
         print(line)
 
 
-def handle_sigquit(sign, frame) -> None:
+def handle_sigquit(sign: Any, frame: Any) -> None:
     raise SystemExit(0)
 
 

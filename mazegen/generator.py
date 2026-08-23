@@ -50,7 +50,6 @@ class MazeGenerator:
         generate_wilson(self.grid, self.width, self.height, self._rng)
         non_perfect(self.grid, self.width, self.height)
 
-
     def _apply_pattern(self) -> None:
         """
         Draws the "42" pattern centered in the grid, marking the
