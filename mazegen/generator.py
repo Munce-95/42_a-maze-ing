@@ -1,14 +1,15 @@
 import random
 import sys
 from .cell import Cell
-from .algorithm import generate_wilson, non_perfect
+from typing import List, Tuple
+from .algorithm import generate_wilson, non_perfect, bfs
 
 
 MIN_DISPLAY_SIZE = 10
 
 PATTERN_42 = [
     [1, 0, 0, 0, 1, 1, 1],
-    [1, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 0, 1, 1, 1],
     [0, 0, 1, 0, 1, 0, 0],
     [0, 0, 1, 0, 1, 1, 1],
@@ -72,3 +73,21 @@ class MazeGenerator:
                     target = self.grid[start_x + px][start_y + py]
                     if val:
                         target.is_blocked = True
+
+    def solve(self,
+              start: Tuple[int, int],
+              end: Tuple[int, int]) -> List[Cell]:
+        """
+        Finds the shortest path between two cells in this maze.
+
+        Args:
+            start: starting coordinates (x, y), e.g. the player's
+                spawn point.
+            end: target coordinates (x, y), e.g. a ghost's spawn
+                point.
+
+        Returns:
+            The shortest path from start to end, as a list of Cell,
+            in order (inclusive of both endpoints).
+        """
+        return bfs(self.grid, self.width, self.height, start, end)
