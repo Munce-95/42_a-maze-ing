@@ -1,5 +1,6 @@
 from .cell import Cell
-from typing import List
+from typing import List, Tuple, Dict, Optional
+from collections import deque
 import random
 
 
@@ -180,3 +181,50 @@ def _walkable_neighbors(cell: Cell,
             else:
                 neighbors.append(grid[neighbor_x][neighbor_y])
     return neighbors
+
+
+def bfs(grid: List[List[Cell]],
+        width: int,
+        height: int,
+        start: Tuple[int, int],
+        end: Tuple[int, int]) -> List[Cell]:
+    """
+    Finds the shortest path between two cells in a fully generated
+    maze using breadth-first search.
+
+    Args:
+        grid: the fully generated grid of Cells.
+        width: the maze's width in cells.
+        height: the maze's height in cells.
+        start: the starting coordinates (x, y).
+        end: the target coordinates (x, y).
+
+    Returns:
+        The shortest path from start to end, as a list of Cell,
+        in order from start to end (inclusive of both).
+    """
+    queue = deque()
+    start_cell: Cell = grid[start[0]][start[1]]
+    end_cell: Cell = grid[end[0]][end[1]]
+    came_from: Dict[Cell, Optional[Cell]] = {}
+    came_from[start_cell] = None
+    queue.append(start_cell)
+    while queue:
+        current = queue.popleft()
+        if current == end_cell:
+            break
+        else:
+            neighbors = _walkable_neighbors(current, grid, width, height)
+            for neighbor in neighbors:
+                if neighbor in came_from:
+                    continue
+                else:
+                    came_from[neighbor] = current
+                queue.append(neighbor)
+    res: List[Cell] = []
+    current = end_cell
+    while current is not None:
+        res.append(current)
+        current = came_from[current]
+    res.reverse()
+    return res
