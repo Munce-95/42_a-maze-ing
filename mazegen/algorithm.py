@@ -45,13 +45,13 @@ def get_unblocked_neighbors(grid: List[List[Cell]],
         The list of the cells that are not obstacles
     """
     neighbors = []
-    for dx, dy in [(0, -1), (1, 0), (0, 1), (-1, 0)]:
-        nx, ny = cell.x + dx, cell.y + dy
+    for dir_x, dir_y in [(0, -1), (1, 0), (0, 1), (-1, 0)]:
+        neighbor_x, neighbor_y = cell.x + dir_x, cell.y + dir_y
         if (
-                0 <= nx < width
-                and 0 <= ny < height
-                and not grid[nx][ny].is_blocked):
-            neighbors.append(grid[nx][ny])
+                0 <= neighbor_x < width
+                and 0 <= neighbor_y < height
+                and not grid[neighbor_x][neighbor_y].is_blocked):
+            neighbors.append(grid[neighbor_x][neighbor_y])
     return neighbors
 
 
@@ -65,7 +65,7 @@ def generate_wilson(grid: List[List[Cell]],
 
     Args:
         grid: the grid of Cells to carve into (already built,
-            with the 42 pattern already applied if any).
+              with the 42 pattern already applied if any).
         width: the maze's width in cells.
         height: the maze's height in cells.
         rng: the seeded random generator to use for all randomness.
@@ -115,7 +115,7 @@ def non_perfect(grid: List[List[Cell]],
 
     Args:
         grid: the grid of Cells, already carved into a perfect maze
-            by generate_wilson.
+              by generate_wilson.
         width: the maze's width in cells.
         height: the maze's height in cells.
     """
@@ -132,18 +132,51 @@ def non_perfect(grid: List[List[Cell]],
                 cell = grid[x][y]
                 if cell.is_blocked or open_count(cell) != 1:
                     continue
-                for dx, dy in directions:
-                    nx, ny = cell.x + dx, cell.y + dy
-                    if not (0 <= nx < width
-                            and 0 <= ny < height):
+                for dir_x, dir_y in directions:
+                    neighbor_x, neighbor_y = cell.x + dir_x, cell.y + dir_y
+                    if not (0 <= neighbor_x < width
+                            and 0 <= neighbor_y < height):
                         continue
-                    neighbor = grid[nx][ny]
+                    neighbor = grid[neighbor_x][neighbor_y]
                     if neighbor.is_blocked:
                         continue
                     wall_dir = {(0, -1): 'N', (1, 0): 'E',
-                                (0, 1): 'S', (-1, 0): 'W'}[(dx, dy)]
+                                (0, 1): 'S', (-1, 0): 'W'}[(dir_x, dir_y)]
                     if not cell.walls[wall_dir]:
                         continue
                     remove_wall(cell, neighbor)
                     changed = True
                     break
+
+
+def _walkable_neighbors(cell: Cell,
+                        grid: List[List[Cell]],
+                        width: int,
+                        height: int) -> List[Cell]:
+    """
+    Finds the neighboring cells reachable from a cell through an
+    already-open wall. Pathfinding through a fully
+    generated maze, unlike get_unblocked_neighbors, which is used
+    during generation and ignores wall state entirely.
+
+    Args:
+        cell: the cell to find walkable neighbors from.
+        grid: the fully generated grid of Cells.
+        width: the maze's width in cells.
+        height: the maze's height in cells.
+
+    Returns:
+        The list of neighboring cells connected to `cell` by an
+        open wall.
+    """
+    neighbors = []
+    for dir_x, dir_y in [(0, -1), (1, 0), (0, 1), (-1, 0)]:
+        neighbor_x, neighbor_y = cell.x + dir_x, cell.y + dir_y
+        wall_dir = {(0, -1): 'N', (1, 0): 'E',
+                    (0, 1): 'S', (-1, 0): 'W'}[(dir_x, dir_y)]
+        if (0 <= neighbor_x < width and 0 <= neighbor_y < height):
+            if cell.walls[wall_dir]:
+                continue
+            else:
+                neighbors.append(grid[neighbor_x][neighbor_y])
+    return neighbors
