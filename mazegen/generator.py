@@ -37,6 +37,8 @@ class MazeGenerator:
     def _apply_pattern(self) -> None:
         if self.height < MIN_DISPLAY_SIZE or self.width < MIN_DISPLAY_SIZE:
             self.pat_42 = False
+            print("Warning: the grid is too small to display the pattern",
+                  file=sys.stderr)
         else:
             self.pat_42 = True
             pat_h, pat_w = len(PATTERN_42), len(PATTERN_42[0])
