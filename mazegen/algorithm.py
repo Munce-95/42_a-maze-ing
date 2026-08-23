@@ -203,14 +203,14 @@ def bfs(grid: List[List[Cell]],
         The shortest path from start to end, as a list of Cell,
         in order from start to end (inclusive of both).
     """
-    queue = deque()
+    queue: deque[Cell] = deque()
     start_cell: Cell = grid[start[0]][start[1]]
     end_cell: Cell = grid[end[0]][end[1]]
     came_from: Dict[Cell, Optional[Cell]] = {}
     came_from[start_cell] = None
     queue.append(start_cell)
     while queue:
-        current = queue.popleft()
+        current: Cell = queue.popleft()
         if current == end_cell:
             break
         else:
@@ -222,9 +222,9 @@ def bfs(grid: List[List[Cell]],
                     came_from[neighbor] = current
                 queue.append(neighbor)
     res: List[Cell] = []
-    current = end_cell
-    while current is not None:
-        res.append(current)
-        current = came_from[current]
+    trace_path: Optional[Cell] = end_cell
+    while trace_path is not None:
+        res.append(trace_path)
+        trace_path = came_from[trace_path]
     res.reverse()
     return res
