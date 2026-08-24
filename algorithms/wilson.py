@@ -10,7 +10,6 @@ from utils_files.data import Data
 from algorithms.dijkstra import solve_dijkstra, mark_path_in_matrix
 from algorithms.gen_output import write_output_file
 from utils_files.cell import Cell
-from utils_files.seeding import apply_and_update_seed
 
 
 current_bg_list: List[str] = []
@@ -368,7 +367,6 @@ def wilson_main(parsed: Data) -> Tuple[List[List[str]],
                                        int,
                                        bool,
                                        List[str]]:
-    apply_and_update_seed(parsed)
     maze, is_sans, bg_list = generate_wilson(parsed)
     matrix, r_w, r_h = build_matrix_1x1(maze, parsed, is_sans=is_sans)
     path = solve_dijkstra(maze, parsed)

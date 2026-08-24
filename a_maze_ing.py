@@ -2,6 +2,7 @@
 
 import sys
 import subprocess
+import random
 from typing import Tuple, List, Any
 from errors import exit_program
 from algorithms.wilson import wilson_main, run_session
@@ -20,6 +21,7 @@ def main() -> None:
     check_raw_data(retrieved_data)
     check_values(retrieved_data)
     parsed: Data = get_parsed_values(retrieved_data)
+    random.seed(parsed.seed)
     new_gen: Tuple[List[List[str]],
                    int,
                    int,
