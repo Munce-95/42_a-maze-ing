@@ -1,6 +1,6 @@
 import sys
 import os
-from typing import Any, Tuple, List, Dict
+from typing import Any, Tuple, List, Dict, Optional
 from utils_files import (nonblank_lines,
                          get_coords_pattern,
                          Data,
@@ -316,7 +316,7 @@ def _check_pattern_displayable(width_height: Tuple[int, int],
 
 def _check_seed(dict_config: Dict[str, Any]) -> None:
     try:
-        seed: int = int(dict_config["SEED"])
+        seed: Optional[int] = int(dict_config["SEED"])
         dict_config.update({"SEED": seed})
     except ValueError:
         raise ValueError("Error: SEED must be a valid integer.")

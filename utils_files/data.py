@@ -1,4 +1,4 @@
-from typing import NamedTuple
+from typing import NamedTuple, Optional
 
 
 class Data(NamedTuple):
@@ -23,5 +23,5 @@ class Data(NamedTuple):
     exit_: tuple[int, int]
     output_file: str
     perfect: bool
-    seed: int
+    seed: Optional[int]
     pattern: str
