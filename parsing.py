@@ -1,6 +1,6 @@
 import sys
 import os
-from typing import Any, Tuple, List, Dict, Optional
+from typing import Any, Tuple, List, Dict
 from utils_files import (nonblank_lines,
                          get_coords_pattern,
                          Data,
