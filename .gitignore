@@ -3,6 +3,8 @@ __pycache__/
 *.pyc
 venv/
 output_file.txt
+mazegen_test_output.txt
+maze_analyzer.py
 test*
 .vscode
 .mypy_cache/

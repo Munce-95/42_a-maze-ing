@@ -3,7 +3,7 @@
 RM_CACHE = rm -rf .mypy_cache .pytest_cache
 RM_PYCACHE = find . -type d -name "__pycache__" -exec rm -rf {} +
 RM_PYC = find . -type f -name "*.pyc" -delete
-RM_OUTPUT = rm -f output_file.txt
+RM_OUTPUT = rm -f output_file.txt mazegen_test_output.txt
 RM_BUILD = rm -rf build dist mazegen.egg-info
 
 # ===== COMPILATION ===== #
