@@ -8,9 +8,12 @@ class Cell:
     or a SANS "eye" cell) rather than being a real, walkable
     maze cell
 
-    Args:
-        x: the cell's column index
-        y: the cell's row index
+    Parameters
+    ----------
+    x : int
+        the cell's column index
+    y : int
+        the cell's row index
     """
     def __init__(
             self,
