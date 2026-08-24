@@ -45,7 +45,8 @@ def retrieve_raw_data(config_file: str) -> Dict[str, Any]:
 
     Returns
     -------
-    A dict with the retrieved data from <config_file>
+    Dict[str, Any]
+        A dict with the retrieved data from <config_file>
 
     Raises
     ------
@@ -311,10 +312,14 @@ def _check_pattern_inclusion(dict_config: Dict[str, Any]) -> str:
     """
     Check if a specific pattern has been selected in config_file
 
-    Args:
-        dict_config: The config data being validated
+    Parameters
+    ----------
+    dict_config : Dict[str, Any]
+        The config data being validated
 
-    Returns:
+    Returns
+    -------
+    str
         The name of the selected pattern (defaults to 42 if none is selected or if more than one is True)
     """
     patterns: List[str] = ["PATTERN_PENGUIN",
@@ -341,14 +346,21 @@ def _check_pattern_displayable(width_height: Tuple[int, int],
     """
     Is pattern displayable? Are both ENTRY and EXIT outside pattern?
 
-    Args:
-        width_height: previously generated Tuple with WIDTH and HEIGHT
-        entry_coords: ENTRY coordinates (x,y)
-        exit_coords: EXIT coordinates (x,y)
-        pattern: previously selected pattern (or 42 by default)
+    Parameters
+    ----------
+    width_height : Tuple[int, int]
+        previously generated Tuple with WIDTH and HEIGHT
+    entry_coords: Tuple[int, int]
+        ENTRY coordinates (x,y)
+    exit_coords: Tuple[int, int]
+        EXIT coordinates (x,y)
+    pattern: str
+        previously selected pattern (or 42 by default)
 
-    Raises:
-        ValueError if ENTRY or EXIT are inside the pattern
+    Raises
+    ------
+    ValueError
+        if ENTRY or EXIT are inside the pattern
     """
     if width_height[1] < MIN_DISPLAY_SIZE \
        or width_height[0] < MIN_DISPLAY_SIZE:
@@ -378,14 +390,15 @@ def _check_seed(dict_config: Dict[str, Any]) -> None:
     Checking that SEED, if present, is a valid integer. Defaults to
     a fixed value if omitted, so generation is always reproducible.
 
-    Args
-    ----
+    Parameters
+    ----------
     dict_config : Dict[str, Any]
         Config data being validated
 
     Raises
     ------
-        ValueError if SEED is present but not a valid integer
+    ValueError
+        if SEED is present but not a valid integer
     """
     seed_str = dict_config.get("SEED", "42")
     try:
@@ -398,8 +411,10 @@ def check_values(dict_config: Dict[str, Any]) -> None:
     """
     Orchestrator for the whole parsing
 
-    Args:
-        dict_config: The config data being validated
+    Parameters
+    ----------
+    dict_config: Dict[str, Any]
+        The config data being validated
     """
     width_height: Tuple[int, int] = _check_dimensions(dict_config)
     _check_perfect(dict_config)
@@ -418,10 +433,14 @@ def get_parsed_values(dict_config: Dict[str, Any]) -> Data:
     """
     Retrieving parsed values from dict and constructing an instance of Data
 
-    Args:
-        dict_config: The config data being validated
+    Parameters
+    ----------
+    dict_config: Dict[str, Any]
+        The config data being validated
 
-    Returns:
+    Returns
+    -------
+    Data
         Data Class which takes a NamedTuple
     """
     parsed_values = Data(dict_config["WIDTH"],
