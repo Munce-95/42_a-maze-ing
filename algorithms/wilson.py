@@ -343,6 +343,7 @@ def run_session(parsed: Data, new_gen: Tuple[List[List[str]],
             choice = input("Select an option: ")
             match choice:
                 case "1":
+                    apply_and_update_seed(parsed, 1)
                     matrix, r_w, r_h, is_sans, _ = wilson_main(parsed)
                     bg_list = get_bg_list_for_pattern(is_sans, theme_index)
                 case "2":
@@ -368,7 +369,6 @@ def wilson_main(parsed: Data) -> Tuple[List[List[str]],
                                        int,
                                        bool,
                                        List[str]]:
-    apply_and_update_seed(parsed)
     maze, is_sans, bg_list = generate_wilson(parsed)
     matrix, r_w, r_h = build_matrix_1x1(maze, parsed, is_sans=is_sans)
     path = solve_dijkstra(maze, parsed)
