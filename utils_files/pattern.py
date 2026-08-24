@@ -90,11 +90,15 @@ def get_pattern_by_name(parsed_pattern: str) -> List[List[int]]:
     """
     Retrieve a pattern's matrix by its name
 
-    Args:
-        parsed_pattern: validated pattern's name from the <config_file>,
+    Parameters
+    ----------
+    parsed_pattern : str
+        validated pattern's name from the <config_file>,
         can be 42 by default
 
-    Returns:
+    Returns
+    -------
+    List[List[int]]
         The selected pattern's matrix
     """
     return pattern_dict[parsed_pattern]

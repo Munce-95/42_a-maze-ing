@@ -7,10 +7,14 @@ class RGB(NamedTuple):
     """
     An RGB colour, convertible to an ANSI background escape code
 
-    Args:
-        r: red channel, 0-255
-        g: green channel, 0-255
-        b: blue channel, 0-255
+    Parameters
+    ----------
+    r : int
+        red channel, 0-255
+    g : int
+        green channel, 0-255
+    b : int
+        blue channel, 0-255
     """
     r: int
     g: int
@@ -18,7 +22,9 @@ class RGB(NamedTuple):
 
     def to_ansi(self) -> str:
         """
-        Returns:
+        Returns
+        -------
+        str
             This colour as an ANSI background-colour escape sequence
         """
         return f"\033[48;2;{self.r};{self.g};{self.b}m"
@@ -28,12 +34,18 @@ class Theme(NamedTuple):
     """
     A named colour scheme for rendering the maze in the terminal
 
-    Args:
-        wall: colour used for maze walls
-        logo: colour used for the pattern's outline/blocked cells
-        path: colour used for plain open-floor cells
-        way: colour used for the solved path's marked cells
-        name: the theme's identifier (e.g. "b/w", "pink", "sans.")
+    Parameters
+    ----------
+    wall : RGB
+        colour used for maze walls
+    logo : RGB
+        colour used for the pattern's outline/blocked cells
+    path : RGB
+        colour used for plain open-floor cells
+    way : RGB
+        colour used for the solved path's marked cells
+    name : str
+        the theme's identifier (e.g. "b/w", "pink", "sans.")
     """
     wall: RGB
     logo: RGB
@@ -86,12 +98,17 @@ def get_bg_list_for_pattern(is_sans_pattern: bool,
     (excluding "sans.") by cycling through theme_index, wrapping
     around once every theme has been used
 
-    Args:
-        is_sans_pattern: whether the maze's selected pattern is SANS
-        theme_index: cycling index into the available (non-SANS)
-            themes; wraps automatically via modulo
+    Parameters
+    ----------
+    is_sans_pattern : bool
+        whether the maze's selected pattern is SANS
+    theme_index : int
+        cycling index into the available (non-SANS)
+        themes; wraps automatically via modulo
 
-    Returns:
+    Returns
+    -------
+    List[str]
         A 5-element list of ANSI escape codes, in order:
         [wall, logo, open-floor, path-default, solved-path]
     """
