@@ -188,8 +188,8 @@ def generate_wilson(parsed: Data) -> Tuple[List[List[Cell]], bool, list[str]]:
     Returns
     -------
     Tuple[List[List[Cell]], bool, List[str]]
-        A tuple containing the maze grid, a boolean indicating if the sans pattern is used,
-        and the list of color themes.
+        A tuple containing the maze grid, a boolean indicating
+        if the sans pattern is used, and the list of color themes.
     """
     grid = [[Cell(x, y) for y in range(parsed.height)]
             for x in range(parsed.width)]
@@ -380,7 +380,7 @@ def run_session(parsed: Data, new_gen: Tuple[List[List[str]],
                                              int,
                                              bool,
                                              List[str]]) -> None:
-                                             """
+    """
     Run the interactive session to control maze options in the terminal.
 
     Parameters
@@ -388,7 +388,8 @@ def run_session(parsed: Data, new_gen: Tuple[List[List[str]],
     parsed : Data
         All the parsed data from the config.txt file.
     new_gen : Tuple[List[List[str]], int, int, bool, List[str]]
-        The initial state tuple containing matrix, width, height, is_sans, and bg_list.
+        The initial state tuple containing matrix, width,
+        height, is_sans, and bg_list.
     """
     signal.signal(signal.SIGQUIT, handle_sigquit)
     matrix, r_w, r_h, is_sans, bg_list = new_gen
@@ -428,7 +429,7 @@ def wilson_main(parsed: Data) -> Tuple[List[List[str]],
                                        int,
                                        bool,
                                        List[str]]:
-                                       """
+    """
     Generate, solve, render, and export the maze.
 
     Parameters

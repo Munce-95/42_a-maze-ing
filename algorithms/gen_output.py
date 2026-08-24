@@ -5,17 +5,21 @@ from utils_files.data import Data
 
 def _hex_conversion(cell: Cell) -> str:
     """
-    Encodes a cell's four walls as a single hexadecimal digit
+    Encode a cell's four walls as a single hexadecimal digit.
 
     Each wall contributes one bit if closed (0=open): North is bit 0,
     East is bit 1, South is bit 2, West is bit 3, per the output
-    file's wall-encoding format
+    file's wall-encoding format.
 
-    Args:
-        cell: the cell whose walls are being encoded
+    Parameters
+    ----------
+    cell : Cell
+        The cell whose walls are being encoded.
 
-    Returns:
-        A single hex character ("0"-"f") representing the closed walls
+    Returns
+    -------
+    str
+        A single hex character ("0"-"f") representing the closed walls.
     """
     value: int = 0
     if cell.walls['N']:
@@ -31,14 +35,24 @@ def _hex_conversion(cell: Cell) -> str:
 
 def _direction(cell_a: Cell, cell_b: Cell) -> str:
     """
-    Determines the compass direction of the step from cell_a to cell_b
+    Determine the compass direction of the step from cell_a to cell_b.
 
-    Args:
-        cell_a: the starting cell
-        cell_b: the adjacent cell stepped into
+    Parameters
+    ----------
+    cell_a : Cell
+        The starting cell.
+    cell_b : Cell
+        The adjacent cell stepped into.
 
-    Returns:
-        One of "N", "E", "S", "W"
+    Returns
+    -------
+    str
+        One of "N", "E", "S", "W".
+
+    Raises
+    ------
+    ValueError
+        If path cells are not adjacent.
     """
     dx = cell_b.x - cell_a.x
     dy = cell_b.y - cell_a.y
@@ -57,16 +71,19 @@ def write_output_file(parsed: Data,
                       maze: List[List[Cell]],
                       path: List[Cell]) -> None:
     """
-    Creates and writes inside the output_file:
-    the matrix translated into hexadecimal,
-    entry and exit coordinates, the path towards the exit.
+    Create and write the output file containing the maze representation.
 
-    Args:
-        output_file: name given at parsing, the file doesn't exist at first
-        entry_coords: ENTRY coordinates
-        exit_coords: EXIT coordinates
-        maze: matrix used to be translates into hexa
-        path: path from ENTRY to EXIT
+    Writes the hexadecimal-encoded matrix, entry and exit coordinates,
+    and the sequence of directions leading to the exit.
+
+    Parameters
+    ----------
+    parsed : Data
+        All the parsed data from the config.txt file.
+    maze : List[List[Cell]]
+        Matrix of cells representing the generated maze.
+    path : List[Cell]
+        List of cells representing the shortest path from entry to exit.
     """
     width: int = len(maze)
     height: int = len(maze[0])
