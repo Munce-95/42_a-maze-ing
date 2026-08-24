@@ -314,6 +314,14 @@ def _check_pattern_displayable(width_height: Tuple[int, int],
                              f" and ({coords['end_x']}, {coords['end_y']})")
 
 
+def _check_seed(dict_config: Dict[str, Any]) -> None:
+    try:
+        seed: int = int(dict_config["SEED"])
+        dict_config.update({"SEED": seed})
+    except ValueError:
+        raise ValueError("Error: SEED must be a valid integer.")
+
+
 def check_values(dict_config: Dict[str, Any]) -> None:
     """
     Orchestrator for the whole parsing
@@ -331,6 +339,7 @@ def check_values(dict_config: Dict[str, Any]) -> None:
     pattern: str = _check_pattern_inclusion(dict_config)
     _check_pattern_displayable(width_height,
                                entry_coords, exit_coords, pattern)
+    _check_seed(dict_config)
 
 
 def get_parsed_values(dict_config: Dict[str, Any]) -> Data:
@@ -349,5 +358,6 @@ def get_parsed_values(dict_config: Dict[str, Any]) -> Data:
                          dict_config["EXIT"],
                          dict_config["OUTPUT_FILE"],
                          dict_config["PERFECT"],
+                         dict_config["SEED"],
                          dict_config["PATTERN"])
     return parsed_values
