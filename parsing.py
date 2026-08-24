@@ -57,6 +57,9 @@ def retrieve_raw_data(config_file: str) -> Dict[str, Any]:
                 elif line.count('=') > 1:
                     raise ValueError("Error: there can only be one"
                                      " key/value pair per line.")
+                elif line.count('=') == 0:
+                    raise ValueError("Error: key/value pair must be"
+                                     "seperated by a '='.")
                 else:
                     key, value = line.split('=', 1)
                     if key.upper().strip() in raw_config:
