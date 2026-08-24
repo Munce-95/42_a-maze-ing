@@ -24,16 +24,21 @@ class MazeGenerator:
     maze), and includes a visible "42" pattern when the grid is
     large enough.
 
-    Basic usage:
-        gen = MazeGenerator(width=20, height=15, seed=42)
-        gen.grid            # list[list[Cell]], gen.grid[x][y]
-        gen.pat_42           # True if the 42 pattern was drawn
-        gen.solve((0, 0), (19, 14))  # shortest path as a list of Cell
+    Examples
+    --------
+    >>> gen = MazeGenerator(width=20, height=15, seed=42)
+    >>> gen.grid            # list[list[Cell]], gen.grid[x][y]
+    >>> gen.pat_42           # True if the 42 pattern was drawn
+    >>> gen.solve((0, 0), (19, 14))  # shortest path as a list of Cell
 
-    Args:
-        width: maze width in cells.
-        height: maze height in cells.
-        seed: seed for reproducible generation (default 42).
+    Parameters
+    ----------
+    width : int
+        maze width in cells.
+    height : int
+        maze height in cells.
+    seed : int
+        seed for reproducible generation (default 42).
     """
     def __init__(
             self,
@@ -80,13 +85,18 @@ class MazeGenerator:
         """
         Finds the shortest path between two cells in this maze.
 
-        Args:
-            start: starting coordinates (x, y), e.g. the player's
-                spawn point.
-            end: target coordinates (x, y), e.g. a ghost's spawn
-                point.
+        Parameters
+        ----------
+        start : Tuple[int, int]
+            starting coordinates (x, y), e.g. the player's
+            spawn point.
+        end : Tuple[int, int]
+            target coordinates (x, y), e.g. a ghost's spawn
+            point.
 
-        Returns:
+        Returns
+        -------
+        List[Cell]
             The shortest path from start to end, as a list of Cell,
             in order (inclusive of both endpoints).
         """
