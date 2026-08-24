@@ -16,8 +16,8 @@ def check_args() -> None:
 
     Raises:
         ValueError: if the number of arguments is different than 2
-        FileNotFoundError if the provided <config_file> doesn't exist
-        IsADirectoryError if <config_file> is a directory
+        FileNotFoundError: if the provided <config_file> doesn't exist
+        IsADirectoryError: if <config_file> is a directory
     """
     if len(sys.argv) != 2:
         raise ValueError("Error: there must be only one argument!\n"
