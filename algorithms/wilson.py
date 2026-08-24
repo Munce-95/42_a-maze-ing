@@ -10,7 +10,6 @@ from utils_files.data import Data
 from algorithms.dijkstra import solve_dijkstra, mark_path_in_matrix
 from algorithms.gen_output import write_output_file
 from utils_files.cell import Cell
-from utils_files.seeding import apply_and_update_seed
 
 
 current_bg_list: List[str] = []
