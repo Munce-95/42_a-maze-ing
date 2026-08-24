@@ -315,10 +315,20 @@ def _check_pattern_displayable(width_height: Tuple[int, int],
 
 
 def _check_seed(dict_config: Dict[str, Any]) -> None:
+    """
+    Checking that SEED, if present, is a valid integer. Defaults to
+    a fixed value if omitted, so generation is always reproducible.
+
+    Args:
+        dict_config: config data being validated
+
+    Raises:
+        ValueError if SEED is present but not a valid integer
+    """
+    seed_str = dict_config.get("SEED", "42")
     try:
-        seed: Optional[int] = int(dict_config["SEED"])
-        dict_config.update({"SEED": seed})
-    except ValueError:
+        dict_config["SEED"] = int(seed_str)
+    except (TypeError, ValueError):
         raise ValueError("Error: SEED must be a valid integer.")
 
 
