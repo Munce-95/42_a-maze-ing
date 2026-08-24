@@ -23,5 +23,5 @@ class Data(NamedTuple):
     exit_: tuple[int, int]
     output_file: str
     perfect: bool
-    seed: Optional[int]
+    seed: int
     pattern: str

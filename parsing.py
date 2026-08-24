@@ -316,7 +316,7 @@ def _check_pattern_displayable(width_height: Tuple[int, int],
 
 def _check_seed(dict_config: Dict[str, Any]) -> None:
     try:
-        seed: Optional[int] = int(dict_config["SEED"])
+        seed: int = int(dict_config["SEED"])
         dict_config.update({"SEED": seed})
     except ValueError:
         raise ValueError("Error: SEED must be a valid integer.")
