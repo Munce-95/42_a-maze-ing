@@ -320,7 +320,8 @@ def _check_pattern_inclusion(dict_config: Dict[str, Any]) -> str:
     Returns
     -------
     str
-        The name of the selected pattern (defaults to 42 if none is selected or if more than one is True)
+        The name of the selected pattern
+        (defaults to 42 if none is selected or if more than one is True)
     """
     patterns: List[str] = ["PATTERN_PENGUIN",
                            "PATTERN_HEART",
