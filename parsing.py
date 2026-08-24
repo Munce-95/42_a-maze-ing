@@ -351,11 +351,11 @@ def _check_pattern_displayable(width_height: Tuple[int, int],
     ----------
     width_height : Tuple[int, int]
         previously generated Tuple with WIDTH and HEIGHT
-    entry_coords: Tuple[int, int]
+    entry_coords : Tuple[int, int]
         ENTRY coordinates (x,y)
-    exit_coords: Tuple[int, int]
+    exit_coords : Tuple[int, int]
         EXIT coordinates (x,y)
-    pattern: str
+    pattern : str
         previously selected pattern (or 42 by default)
 
     Raises
@@ -414,7 +414,7 @@ def check_values(dict_config: Dict[str, Any]) -> None:
 
     Parameters
     ----------
-    dict_config: Dict[str, Any]
+    dict_config : Dict[str, Any]
         The config data being validated
     """
     width_height: Tuple[int, int] = _check_dimensions(dict_config)
@@ -436,7 +436,7 @@ def get_parsed_values(dict_config: Dict[str, Any]) -> Data:
 
     Parameters
     ----------
-    dict_config: Dict[str, Any]
+    dict_config : Dict[str, Any]
         The config data being validated
 
     Returns
