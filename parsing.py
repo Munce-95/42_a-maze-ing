@@ -1,6 +1,6 @@
 import sys
 import os
-from typing import Any, Tuple, List, Dict, Optional
+from typing import Any, Tuple, List, Dict
 from utils_files import (nonblank_lines,
                          get_coords_pattern,
                          Data,
@@ -14,10 +14,14 @@ def check_args() -> None:
     """
     Is there only one argument? Does the file passed as argv[1] exist?
 
-    Raises:
-        ValueError: if the number of arguments is different than 2
-        FileNotFoundError: if the provided <config_file> doesn't exist
-        IsADirectoryError: if <config_file> is a directory
+    Raises
+    ------
+    ValueError
+        if the number of arguments is different than 2
+    FileNotFoundError
+        if the provided <config_file> doesn't exist
+    IsADirectoryError
+        if <config_file> is a directory
     """
     if len(sys.argv) != 2:
         raise ValueError("Error: there must be only one argument!\n"
@@ -34,17 +38,25 @@ def retrieve_raw_data(config_file: str) -> Dict[str, Any]:
     """
     Retrieving data from <config_file> provided by user (argv[1])
 
-    Args:
-        config_file: file provided with argv[1]
+    Parameters
+    ----------
+    config_file : str
+        file provided with argv[1]
 
-    Returns:
-        A dict with the retrieved data from <config_file>
+    Returns
+    -------
+    A dict with the retrieved data from <config_file>
 
-    Raises:
-        KeyError if a key starts with a space
-        ValueError if there is more than one key/value pair per line
-        ValueError if <config_file> is not valid text
-        PermissionError if <config_file> doesn't have the proper permission
+    Raises
+    ------
+    KeyError
+        if a key starts with a space
+    ValueError
+        if there is more than one key/value pair per line
+    ValueError
+        if <config_file> is not valid text
+    PermissionError
+        if <config_file> doesn't have the proper permission
     """
     raw_config: Dict[str, Any] = {}
     try:
@@ -57,6 +69,9 @@ def retrieve_raw_data(config_file: str) -> Dict[str, Any]:
                 elif line.count('=') > 1:
                     raise ValueError("Error: there can only be one"
                                      " key/value pair per line.")
+                elif line.count('=') == 0:
+                    raise ValueError("Error: key/value pair must be"
+                                     "seperated by a '='.")
                 else:
                     key, value = line.split('=', 1)
                     if key.upper().strip() in raw_config:
@@ -74,13 +89,19 @@ def check_raw_data(raw_config: Dict[str, Any]) -> None:
     """
     Checking the data prior any mutation
 
-    Args:
-        raw_config: a dict made out of the data from <config_file>
+    Parameters
+    ----------
+    raw_config : Dict[str, Any]
+        A dict made out of the data from <config_file>
 
-    Raises:
-        ValueError if at least 6 keys are not present
-        KeyError if keys are commented or not written using letters/underscores
-        KeyError if one of the mandatory keys is missing
+    Raises
+    ------
+    ValueError
+        if at least 6 keys are not present
+    KeyError
+        if keys are commented or not written using letters/underscores
+    KeyError
+        if one of the mandatory keys is missing
     """
     if len(raw_config) < 6:
         raise ValueError("Error: there must be at least 6 keys"
@@ -103,15 +124,21 @@ def _check_dimensions(dict_config: Dict[str, Any]) -> Tuple[int, int]:
     """
     Checking that WIDTH and HEIGHT are valid integers.
 
-    Args:
-        dict_config: The config data being validated
+    Parameters
+    ----------
+    dict_config : dict[str, Any]
+        The config data being validated.
 
-    Returns:
-        A tuple holding our WIDTH and HEIGHT
+    Returns
+    -------
+    Tuple[int, int]
+        A tuple holding WIDTH and HEIGHT.
 
-    Raises:
-        ValueError if WIDTH and HEIGHT are not valid integers
-        or if they are not between 3 and 50.
+    Raises
+    ------
+    ValueError
+        If WIDTH and HEIGHT are not valid integers, or not between
+        3 and 50.
     """
     try:
         width: int = int(dict_config["WIDTH"])
@@ -131,11 +158,15 @@ def _check_perfect(dict_config: Dict[str, Any]) -> None:
     """
     Checking that PERFECT accepts true or false and make it a boolean
 
-    Args:
-        dict_config: The config data being validated
+    Parameters
+    ----------
+    dict_config : Dict[str, Any]
+        The config data being validated
 
-    Raises:
-        ValueError if <value> for PERFECT is anything else than true/false
+    Raises
+    ------
+    ValueError
+        if <value> for PERFECT is anything else than true/false
     """
     perfect: str = dict_config.get("PERFECT", "").lower()
     if perfect not in ("true", "false"):
@@ -148,11 +179,15 @@ def _check_output_file(dict_config: Dict[str, Any]) -> None:
     """
     Making sure the output file is a .txt
 
-    Args:
-        dict_config: The config data being validated
+    Parameters
+    ----------
+    dict_config : Dict[str, Any]
+        The config data being validated
 
-    Raises:
-        ValueError if <output_file> doesn't end with .txt
+    Raises
+    ------
+    ValueError
+        if <output_file> doesn't end with .txt
     """
     output: str = dict_config["OUTPUT_FILE"]
     if not output.endswith(".txt"):
@@ -164,15 +199,22 @@ def _check_entry_format(dict_config: Dict[str, Any]) -> Tuple[int, int]:
     """
     Checking that ENTRY has 2 valid integers
 
-    Args:
-        dict_config: The config data being validated
+    Parameters
+    ----------
+    dict_config : Dict[str, Any]
+        The config data being validated
 
-    Returns:
+    Returns
+    -------
+    Tuple[int, int]
         A Tuple holding ENTRY coordinates
 
-    Raises:
-        ValueError if (x,y) format is not respected
-        ValueError if ENTRY is not valid integers
+    Raises
+    ------
+    ValueError
+        if (x,y) format is not respected
+    ValueError
+        if ENTRY is not valid integers
     """
     values = dict_config["ENTRY"].split(',', 1)
     if len(values) != 2:
@@ -189,15 +231,22 @@ def _check_exit_format(dict_config: Dict[str, Any]) -> Tuple[int, int]:
     """
     Checking that EXIT has 2 valid integers
 
-    Args:
-        dict_config: The config data being validated
+    Parameters
+    ----------
+    dict_config : Dict[str, Any]
+        The config data being validated
 
-    Returns:
+    Returns
+    -------
+    Tuple[int, int]
         A Tuple holding EXIT coordinates
 
-    Raises:
-        ValueError if (x,y) format is not respected
-        ValueError if EXIT is not valid integers
+    Raises
+    ------
+    ValueError
+        if (x,y) format is not respected
+    ValueError
+        if EXIT is not valid integers
     """
     values = dict_config["EXIT"].split(',', 1)
     if len(values) != 2:
@@ -216,13 +265,19 @@ def _check_entry_exit_bound(width_height: Tuple[int, int],
     """
     Checking that ENTRY and EXIT are within the grid
 
-    Args:
-        width_height: previously generated Tuple with WIDTH and HEIGHT
-        entry_coords: ENTRY coordinates (x,y)
-        exit_coords: EXIT coordinates (x,y)
+    Parameters
+    ----------
+    width_height : Tuple[int, int]
+        previously generated Tuple with WIDTH and HEIGHT
+    entry_coords : Tuple[int, int]
+        ENTRY coordinates (x,y)
+    exit_coords : Tuple[int, int]
+        EXIT coordinates (x,y)
 
-    Raises:
-        ValueError if ENTRY or EXIT are set outside the grid
+    Raises
+    ------
+    ValueError
+        if ENTRY or EXIT are set outside the grid
     """
     if not (0 <= entry_coords[0] < width_height[0]) \
         or not (0 <= entry_coords[1] < width_height[1]) \
@@ -236,12 +291,17 @@ def _check_entry_exit_equality(entry_coords: Tuple[int, int],
     """
     Making sure ENTRY and EXIT are different
 
-    Args:
-        entry_coords: ENTRY coordinates (x,y)
-        exit_coords: EXIT coordinates (x,y)
+    Parameters
+    ----------
+    entry_coords : Tuple[int, int]
+        ENTRY coordinates (x,y)
+    exit_coords : Tuple[int, int]
+        EXIT coordinates (x,y)
 
-    Raises:
-        ValueError if ENTRY and EXIT are the same
+    Raises
+    ------
+    ValueError
+        if ENTRY and EXIT are the same
     """
     if entry_coords == exit_coords:
         raise ValueError("Error: ENTRY and EXIT cannot be the same.")
@@ -249,14 +309,13 @@ def _check_entry_exit_equality(entry_coords: Tuple[int, int],
 
 def _check_pattern_inclusion(dict_config: Dict[str, Any]) -> str:
     """
-    Check if a specific pattern has been selected in <config_file>
+    Check if a specific pattern has been selected in config_file
 
     Args:
         dict_config: The config data being validated
 
     Returns:
-        The name of the selected pattern (defaults to 42
-        if none is selected or if more than one is True)
+        The name of the selected pattern (defaults to 42 if none is selected or if more than one is True)
     """
     patterns: List[str] = ["PATTERN_PENGUIN",
                            "PATTERN_HEART",
@@ -319,10 +378,13 @@ def _check_seed(dict_config: Dict[str, Any]) -> None:
     Checking that SEED, if present, is a valid integer. Defaults to
     a fixed value if omitted, so generation is always reproducible.
 
-    Args:
-        dict_config: config data being validated
+    Args
+    ----
+    dict_config : Dict[str, Any]
+        Config data being validated
 
-    Raises:
+    Raises
+    ------
         ValueError if SEED is present but not a valid integer
     """
     seed_str = dict_config.get("SEED", "42")
