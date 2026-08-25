@@ -139,7 +139,7 @@ def _check_dimensions(dict_config: Dict[str, Any]) -> Tuple[int, int]:
     ------
     ValueError
         If WIDTH and HEIGHT are not valid integers, or not between
-        3 and 50.
+        2 and 50.
     """
     try:
         width: int = int(dict_config["WIDTH"])
@@ -149,9 +149,9 @@ def _check_dimensions(dict_config: Dict[str, Any]) -> Tuple[int, int]:
     except (TypeError, ValueError):
         raise ValueError("Error: WIDTH and HEIGHT must"
                          " be valid integers in <config_file>.")
-    if not 3 <= width <= 50 or not 3 <= height <= 50:
+    if not 2 <= width <= 50 or not 2 <= height <= 50:
         raise ValueError("Error: WIDTH and HEIGHT must be"
-                         " >= 3 and <= 50 in <config_file>.")
+                         " >= 2 and <= 50 in <config_file>.")
     return (dict_config["WIDTH"], dict_config["HEIGHT"])
 
 
