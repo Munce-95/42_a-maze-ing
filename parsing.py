@@ -381,7 +381,7 @@ def _check_pattern_displayable(width_height: Tuple[int, int],
                 or (coords["start_x"] <= exit_coords[0] < coords["end_x"]
                     and coords["start_y"] <= exit_coords[1] < coords["end_y"]):
             raise ValueError(f"Error: values for ENTRY and"
-                             f"EXIT must be outside"
+                             f" EXIT must be outside"
                              f" ({coords['start_x']}, {coords['start_y']})"
                              f" and ({coords['end_x']}, {coords['end_y']})")
 
