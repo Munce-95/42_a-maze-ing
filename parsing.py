@@ -347,7 +347,8 @@ def _check_pattern_displayable(width_height: Tuple[int, int],
                                exit_coords: Tuple[int, int],
                                pattern: str) -> None:
     """
-    Is pattern displayable? Are both ENTRY and EXIT outside pattern?
+    Checking if the pattern is displayable and that both ENTRY and EXIT are
+    not on a drawn (blocked) pattern cell.
 
     Parameters
     ----------
@@ -363,29 +364,31 @@ def _check_pattern_displayable(width_height: Tuple[int, int],
     Raises
     ------
     ValueError
-        if ENTRY or EXIT are inside the pattern
+        if ENTRY or EXIT land on a drawn pattern cell
     """
     if width_height[1] < MIN_DISPLAY_SIZE \
        or width_height[0] < MIN_DISPLAY_SIZE:
         print("Warning: the grid is too small to display the pattern",
               file=sys.stderr)
-    else:
-        pattern_matrix: List[List[int]] = get_pattern_by_name(pattern)
-        pattern_h: int = len(pattern_matrix)
-        pattern_w: int = len(pattern_matrix[0])
-        coords: Dict[str, int] = \
-            get_coords_pattern(width_height[1],
-                               width_height[0],
-                               pattern_h,
-                               pattern_w)
-        if (coords["start_x"] <= entry_coords[0] < coords["end_x"]
-            and coords["start_y"] <= entry_coords[1] < coords["end_y"]) \
-                or (coords["start_x"] <= exit_coords[0] < coords["end_x"]
-                    and coords["start_y"] <= exit_coords[1] < coords["end_y"]):
-            raise ValueError(f"Error: values for ENTRY and"
-                             f" EXIT must be outside"
-                             f" ({coords['start_x']}, {coords['start_y']})"
-                             f" and ({coords['end_x']}, {coords['end_y']})")
+        return
+
+    pattern_matrix: List[List[int]] = get_pattern_by_name(pattern)
+    pattern_h: int = len(pattern_matrix)
+    pattern_w: int = len(pattern_matrix[0])
+    coords: Dict[str, int] = \
+        get_coords_pattern(width_height[1],
+                            width_height[0],
+                            pattern_h,
+                            pattern_w)
+
+    def _lands_on_drawn_cell(point: Tuple[int, int]) -> bool:
+        px, py = point[0] - coords["start_x"], point[1] - coords["start_y"]
+        if not (0 <= px < pattern_w and 0 <= py < pattern_h):
+            return False
+        return pattern_matrix[py][px] != 0
+
+    if _lands_on_drawn_cell(entry_coords) or _lands_on_drawn_cell(exit_coords):
+        raise ValueError("Error: Entry and EXIT must not land on the pattern's drawn cells.")
 
 
 def _check_seed(dict_config: Dict[str, Any]) -> None:
