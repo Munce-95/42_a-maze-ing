@@ -1,4 +1,3 @@
-*This project has been created as part of the 42 curriculum by celgremy & mgedeon.*
 # mazegen
 
 A self-contained, seed-reproducible maze generator.
