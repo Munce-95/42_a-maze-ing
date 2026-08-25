@@ -41,12 +41,15 @@ file, bad syntax, invalid or out-of-range values, permission issues, etc.)
 with a clear message instead of crashing.
 
 # Resources
-
-[BFS video](https://www.youtube.com/watch?v=HZ5YTanv5QE): Used to understand BFS algo.
-
-[Docstring documentation](https://www.geeksforgeeks.org/python/python-docstrings/): Used to understand Docstring and the difference between Google and Numpydoc styles.
-
-[A-Maze-ing Visualizer](https://amazeing.app/simulation/): Used to visualize and verify the execution of both Wilson's and Dijkstra's algorithms.
+- [numpydoc Style Guide](https://numpydoc.readthedocs.io/en/latest/format.html) — docstring format conventions used throughout the project.
+- [Maze Generation Algorithms – An Exploration](https://professor-l.github.io/mazes/) — animated explanations of perfect-maze algorithms, including Wilson's.
+- [Wilson's Algorithm (visualization)](https://gist.github.com/mbostock/11357811) — visual demo of loop-erased random walks producing a uniform spanning tree.
+- [Generating Mazes](https://healeycodes.com/generating-mazes) — comparison of maze algorithms and their bias trade-offs.
+- [Writing your pyproject.toml](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/) — official Python Packaging User Guide, used to build `mazegen`'s wheel.
+- [pdb — The Python Debugger](https://docs.python.org/3/library/pdb.html) — official docs for the debugger used by `make debug`.
+- [BFS video](https://www.youtube.com/watch?v=HZ5YTanv5QE): Used to understand BFS algo.
+- [Docstring documentation](https://www.geeksforgeeks.org/python/python-docstrings/): Used to understand Docstring and the difference between Google and Numpydoc styles.
+- [A-Maze-ing Visualizer](https://amazeing.app/simulation/): Used to visualize and verify the execution of both Wilson's and Dijkstra's algorithms.
 
 **AI usage**:
 
@@ -176,16 +179,40 @@ reason to want this project's specific extra patterns or colours.
 
 ### Roles of each team member
 
-TODO.
+- **celgremy** — the live project's visual representation (terminal
+  rendering, colours) and the maze generation algorithm (Wilson's
+  algorithm, dead-end removal for the loopy mode).
+- **mgedeon** — configuration parsing and validation (`parsing.py`,
+  `utils_files/`), and adapting the generation logic into the
+  standalone `mazegen` package.
+
 
 ### Anticipated planning and how it evolved
 
-TODO.
+Config parsing and the maze generation algorithm were built in parallel
+from the start, meeting at a small set of agreed interfaces (the `Data`
+object, and later a shared understanding of `Cell`'s wall representation).
+
+Several pieces were reworked as requirements became clearer along the
+way: the pattern system grew from just the mandatory "42" into several
+optional selectable patterns, the `PERFECT=False` mode moved from a
+random wall-removal ratio to a dead-end-targeted approach once the
+ratio-based version failed the analyzer, and the reusable `mazegen`
+package's scope changed more than once (single-file vs. proper
+sub-package, and whether it should include the "42" pattern at all,
+settled after checking directly with other people).
+
+The interactive terminal
+menu, seed reproducibility, and full documentation/packaging pass were
+added later, once the core generation and parsing were stable.
 
 ### What worked well and what could be improved
 
-TODO.
+This isn't our first project working together, so we already knew each
+other's strengths going in, which let us split the work quickly and
+work mostly in parallel rather than figuring that out along the way.
+What could be improved: time management.
 
 ### Did we use any specific tools? Which ones?
 
-TODO.
+GitHub (version control, collaboration) and Discord (communication).
