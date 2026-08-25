@@ -46,6 +46,8 @@ TODO: list documentation, articles, and tutorials consulted for maze
 generation algorithms (Wilson's algorithm, dead-end removal for loopy
 mazes) and Python packaging.
 
+[A-Maze-ing Visualizer](https://amazeing.app/simulation/): Used to visualize and verify the execution of both Wilson's and Dijkstra's algorithms.
+
 **AI usage**: Claude was used as a peer-review / rubber-duck assistant
 throughout the parsing module (`parsing.py`, `utils_files/`) and the
 `mazegen` package, under strict rules: no code was written by the AI
@@ -60,6 +62,11 @@ understood by the author before being kept.
 
 TODO: add a note here on any AI usage in the maze generation algorithm
 (`wilson.py`) or TUI display, if applicable to that teammate's work.
+
+Gemini was used to help explain certain concepts, such as tracking visited cells and pattern generation across the maze. It also assisted with refactoring long functions in `wilson.py`. 
+The AI was primarily used as help to translate conceptual ideas into code.
+Every prompt explicitly instructed the model not to write code directly, limiting output to explanations or pseudocode.
+As a result, 95% of the code was written by hand.
 
 ## Config file's structure
 
@@ -133,6 +140,9 @@ itself creates.
 TODO (owned by the teammate who implemented generation) — briefly, why
 Wilson's algorithm was chosen over alternatives like Prim's or Kruskal's
 (e.g. unbiased maze distribution, simplicity of implementation).
+
+We originally planned to use the Kruskal's algorithm for the maze generation. After discussing with some peers about their **A-Maze-Ing** project, we decided to work with Wilson's algorithm, because it is easier to implement than Kruskal.
+And for the pathfinding, we wanted to avoid what others usually use, and opted for Dijkstra's algorithm
 
 ## What part of the code is reusable? How?
 
