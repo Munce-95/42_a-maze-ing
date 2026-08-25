@@ -193,6 +193,8 @@ def _check_output_file(dict_config: Dict[str, Any]) -> None:
     output: str = dict_config["OUTPUT_FILE"]
     if not output.endswith(".txt"):
         raise ValueError("Error: <OUTPUT_FILE> should be a .txt")
+    if output == "config.txt":
+        raise ValueError("Error: why would you try this...?")
     dict_config.update({"OUTPUT_FILE": output})
 
 
