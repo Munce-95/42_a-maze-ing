@@ -24,4 +24,5 @@ __all__ = [
     "generate_wilson",
     "build_matrix_1x1",
     "render_terminal_blocks",
-    "wilson_main"]
+    "wilson_main"
+    ]
