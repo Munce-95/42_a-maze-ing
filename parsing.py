@@ -377,9 +377,9 @@ def _check_pattern_displayable(width_height: Tuple[int, int],
     pattern_w: int = len(pattern_matrix[0])
     coords: Dict[str, int] = \
         get_coords_pattern(width_height[1],
-                            width_height[0],
-                            pattern_h,
-                            pattern_w)
+                           width_height[0],
+                           pattern_h,
+                           pattern_w)
 
     def _lands_on_drawn_cell(point: Tuple[int, int]) -> bool:
         px, py = point[0] - coords["start_x"], point[1] - coords["start_y"]
@@ -388,7 +388,8 @@ def _check_pattern_displayable(width_height: Tuple[int, int],
         return pattern_matrix[py][px] != 0
 
     if _lands_on_drawn_cell(entry_coords) or _lands_on_drawn_cell(exit_coords):
-        raise ValueError("Error: Entry and EXIT must not land on the pattern's drawn cells.")
+        raise ValueError("Error: Entry and EXIT must not"
+                         " land on the pattern's drawn cells.")
 
 
 def _check_seed(dict_config: Dict[str, Any]) -> None:

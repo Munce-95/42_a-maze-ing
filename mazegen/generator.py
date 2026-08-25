@@ -99,5 +99,22 @@ class MazeGenerator:
         List[Cell]
             The shortest path from start to end, as a list of Cell,
             in order (inclusive of both endpoints).
+
+        Raises
+        ------
+        ValueError
+            if start or end are out of bounds, fall on a
+            pattern-blocked cell, or are the same.
         """
+        if start == end:
+            raise ValueError(f"Error: start and end cannot"
+                             f" be the same point ({start}).")
+        for point, label in ((start, "start"), (end, "end")):
+            x, y = point
+            if not (0 <= x < self.width and 0 <= y < self.height):
+                raise ValueError(f"Error: {label} {point} is"
+                                 f" outside the maze.")
+            if self.grid[x][y].is_blocked:
+                raise ValueError(f"Error: {label} {point} lands on a"
+                                 f" pattern-blocked cell.")
         return bfs(self.grid, self.width, self.height, start, end)
