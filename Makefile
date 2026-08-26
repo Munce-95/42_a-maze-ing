@@ -19,6 +19,7 @@ FLAGS = --warn-return-any --warn-unused-ignores --ignore-missing-imports --disal
 FILE = a_maze_ing.py
 CONF = config.txt
 BUILD_VENV = .build-venv
+MAZEGEN = mazegen-1.42-py3-none-any.whl
 
 # ===== RULES ===== #
 
@@ -56,6 +57,7 @@ package:
 	$(P3) -m venv $(BUILD_VENV)
 	./$(BUILD_VENV)/bin/pip install --quiet --upgrade pip build
 	./$(BUILD_VENV)/bin/python3 -m build --wheel
+	mv dist/$(MAZEGEN) .
 	@echo "Built package available in dist/"
 
 clean:
@@ -67,6 +69,7 @@ clean:
 	$(RM_OUTPUT)
 	$(RM_BUILD)
 	rm -rf $(BUILD_VENV)
+	rm $(MAZEGEN)
 	@echo "Clean done."
 
 .PHONY: all run debug lint lint-strict install package clean
